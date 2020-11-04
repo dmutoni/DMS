@@ -32,5 +32,5 @@ app.use('/api/v1/reports', reportsRoute);
 // app.get("/",(req,res) => {
 //     res.json({message: "Welcome to dms application. "});
 // })
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Express server running on port ${PORT} .`));
