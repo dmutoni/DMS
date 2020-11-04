@@ -4,7 +4,7 @@ const {
     createLevel, 
     updateLevel,
     deleteLevel, 
-    getLevel } = require('../controllers/Levels.controller')
+    getLevel } = require('../controllers/levels.controller')
     // const { route } = require('./LevelTypes')
 
 const router = express.Router({ mergeParams: true })

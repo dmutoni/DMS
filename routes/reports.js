@@ -4,7 +4,7 @@ const {
     createReport, 
     updateReport,
     deleteReport, 
-    getReport } = require('../controllers/Reports.controller')
+    getReport } = require('../controllers/reports.controller')
     // const { route } = require('./ReportTypes')
 
 const router = express.Router({ mergeParams: true })
