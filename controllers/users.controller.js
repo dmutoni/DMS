@@ -4,11 +4,11 @@ const { v4: uuidv4 } = require('uuid');
 const Router = app.Router();
 const dbConnection = require('../config/db.config');
 const { Validator } = require('node-input-validator');
+const asyncHandler = require('../middleware/async');
 // let  payloadChecker = require('payload-validator');
 
-Router.get("/getAllUsers", (req, res) => {
-        console.log("reached WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-        dbConnection.query("SELECT * FROM dms_users", (err, rows, fields) => {
+module.exports.getUsers = asyncHandler(async (req, res) => { 
+        await dbConnection.query("SELECT * FROM dms_users", (err, rows, fields) => {
             if (!err) {
                 res.send(rows);
             } else {
@@ -17,7 +17,7 @@ Router.get("/getAllUsers", (req, res) => {
         })
     })
     // const generateId = () => uuidv4()
-Router.post("/createNewUser", (req, res) => {
+module.exports.createUser = asyncHandler(async (req, res) => {
     console.log("amadeni");
 
     const validation = new Validator(req.body, {
@@ -34,7 +34,7 @@ Router.post("/createNewUser", (req, res) => {
         user_type: 'required'
     });
 
-    validation.check().then((matched) => {
+    validation.check().then(async (matched) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
@@ -54,7 +54,7 @@ Router.post("/createNewUser", (req, res) => {
                 req.body.user_status
             ]
             let sql = "INSERT INTO dms_users(user_id,first_name,last_name,gender,email,phone_number,national_id,password,job_title,address,user_type,user_status) VALUES (?);";
-            dbConnection.query(sql, [inserts], (err, results, fields) => {
+           await dbConnection.query(sql, [inserts], (err, results, fields) => {
                 if (err) {
 
                     res.status(401).send({ error: err.sqlMessage })
@@ -70,7 +70,7 @@ Router.post("/createNewUser", (req, res) => {
 
     })
 })
-Router.put("/updateUser/:user_id", function(req, res) {
+module.exports.updateUser =  asyncHandler (async (req, res) => {
     let user_id = req.params['user_id'];
     user_id.trim();
     // let ii_id = req.params.iid;
@@ -87,7 +87,7 @@ Router.put("/updateUser/:user_id", function(req, res) {
         address: 'required',
         user_type: 'required'
     });
-    validation.check().then((matched) => {
+    validation.check().then(async (matched) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
@@ -109,7 +109,7 @@ Router.put("/updateUser/:user_id", function(req, res) {
             if (!user_id || !inserts) {
                 return res.status(400).send({ error: user, message: 'Please provide user and user id' });
             }
-            let printQuery = dbConnection.query("UPDATE dms_users SET ? where user_id  = ?", [inserts, user_id], function(error, results, fields) {
+            let printQuery = await dbConnection.query("UPDATE dms_users SET ? where user_id  = ?", [inserts, user_id], function(error, results, fields) {
                 if (error) {
 
                     res.status(401).send({ error: error.sqlMessage })
@@ -125,13 +125,13 @@ Router.put("/updateUser/:user_id", function(req, res) {
         }
     });
 });
-Router.put('/delete/:id', (req, res) => {
+module.exports.deleteUser = asyncHandler(async(req, res) => {
     let user_id = req.params['id'];
     let status = "INACTIVe"
     if (!user_id) {
         return res.status(400).send({ error: true, message: 'Please provide a user id' });
     }
-    dbConnection.query("UPDATE dms_users SET user_status = ?  WHERE user_id = ?", [status, user_id], function(error, results, fields) {
+   await dbConnection.query("UPDATE dms_users SET user_status = ?  WHERE user_id = ?", [status, user_id], function(error, results, fields) {
         if (error) throw error;
         else {
             console.log(results)
@@ -141,5 +141,3 @@ Router.put('/delete/:id', (req, res) => {
         }
     });
 })
-
-module.exports = Router;

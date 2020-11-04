@@ -4,10 +4,11 @@ const { v4: uuidv4 } = require('uuid');
 const Router = app.Router();
 const dbConnection = require('../config/db.config');
 const { Validator } = require('node-input-validator');
+const asyncHandler = require('../middleware/async');
 
 
-Router.get("/getAllHighRiskZones", (req, res) => {
-    dbConnection.query("SELECT * FROM dms_high_risk_zones", (err, rows, fields) => {
+module.exports.get_h_zones = asyncHandler(async (req, res) => {
+   await dbConnection.query("SELECT * FROM dms_high_risk_zones", (err, rows, fields) => {
         if (!err) {
             res.send(rows);
         } else {
@@ -36,7 +37,7 @@ function checkUserId(user_id, callBack) {
 }
 
 
-Router.post("/createHighRiskZones", function(req, res) {
+module.exports.create_h_zone = asyncHandler( async (req, res) => {
 
     const validation = new Validator(req.body, {
         zone_name: 'required',
@@ -48,7 +49,7 @@ Router.post("/createHighRiskZones", function(req, res) {
 
 
 
-    validation.check().then((matched) => {
+    validation.check().then(async (matched) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
@@ -77,10 +78,10 @@ Router.post("/createHighRiskZones", function(req, res) {
 
 
 
-            checkUserId(inserts[2], function(isFound) {
+            checkUserId(inserts[2], async function(isFound) {
                 if (isFound) {
                     let sql = "INSERT INTO dms_high_risk_zones(h_zone_id,zone_name, registered_by_user_id, done_on, pictures_store, village_id) VALUES (?);";
-                    dbConnection.query(sql, [inserts], (err, results, fields) => {
+                  await  dbConnection.query(sql, [inserts], (err, results, fields) => {
 
                         if (err) {
 
@@ -105,7 +106,7 @@ Router.post("/createHighRiskZones", function(req, res) {
     })
 })
 
-Router.put("/update/:id", (req, res) => {
+module.exports.update_h_zone = asyncHandler(async (req, res) => {
     let h_zone_id = req.params['id'];
     h_zone_id.trim();
     const validation = new Validator(req.body, {
@@ -115,7 +116,7 @@ Router.put("/update/:id", (req, res) => {
         pictures_store: 'required',
         village_id: 'required'
     });
-    validation.check().then((matched) => {
+    validation.check().then(async (matched) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
@@ -127,7 +128,7 @@ Router.put("/update/:id", (req, res) => {
                 pictures_store: req.body.pictures_store,
                 village_id: req.body.village_id
             }
-            checkUserId(inserts.registered_by_user_id, function(isFound) {
+            checkUserId(inserts.registered_by_user_id, async function(isFound) {
                 if (isFound) {
                     // console.log(h_zone);
 
@@ -137,7 +138,7 @@ Router.put("/update/:id", (req, res) => {
                         return res.status(400).send({ error: h_zone, message: 'Please provide h_zone and h_zone id' });
                     }
 
-                    dbConnection.query("UPDATE dms_high_risk_zones SET ?  WHERE h_zone_id = ?", [inserts, h_zone_id], function(error, results, fields) {
+                   await dbConnection.query("UPDATE dms_high_risk_zones SET ?  WHERE h_zone_id = ?", [inserts, h_zone_id], function(error, results, fields) {
                         if (error) throw error;
                         else {
                             return res.send({ error: false, data: results, message: 'h_zone has been updated successfully.' });
@@ -151,16 +152,15 @@ Router.put("/update/:id", (req, res) => {
     })
 })
 
-Router.delete('/delete/:id', (req, res) => {
+module.exports.delete_h_zone = asyncHandler( async (req, res) => {
     let h_zone_id = req.params['id'];
     h_zone_id.trim();
     if (!h_zone_id) {
         return res.status(400).send({ error: true, message: 'Please provide a h_zone id' });
     }
-    dbConnection.query('DELETE FROM dms_high_risk_zones WHERE h_zone_id = ?', [h_zone_id], function(error, results, fields) {
+   await dbConnection.query('DELETE FROM dms_high_risk_zones WHERE h_zone_id = ?', [h_zone_id], function(error, results, fields) {
         if (error) throw error;
         return res.send({ error: false, data: results, message: 'h_zone has been delete successfully.' });
     });
 })
 
-module.exports = Router;

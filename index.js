@@ -1,11 +1,11 @@
 const express = require('express');
-const locationsController = require('./controllers/locations.controller');
-const victimsController = require('./controllers/victims.controller');
-const usersController = require('./controllers/users.controller');
-const levelsController = require('./controllers/levels.controller');
-const highRiskZonesController = require('./controllers/high-risk-zone.controller');
-const donationsController = require('./controllers/donations.contoller');
-const reportsController = require('./controllers/reports.controller');
+const locationsRoute = require('./controllers/locations.controller');
+const victimRoute = require('./routes/victims')
+const usersRoute = require('./routes/users');
+const levelsRoute = require('./routes/levels');
+const highRiskZonesRoute = require('./routes/high-risk-zone');
+const donationsRoute = require('./routes/donations');
+const reportsRoute = require('./routes/reports');
 const dbConnection = require('./config/db.config');
 // const cors = require("cors");
 // const { Validator } = require('node-input-validator');
@@ -21,13 +21,13 @@ app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: true }));
 
 
-app.use("/api/users", usersController);
-app.use("/api/victims", victimsController);
-app.use("/api/levels", levelsController);
-app.use("/api/locations", locationsController);
-app.use('/api/h_zones', highRiskZonesController);
-app.use('/api/donations', donationsController);
-app.use('/api/reports', reportsController);
+app.use("/api/v1/users", usersRoute);
+app.use("/api/v1/victims", victimRoute);
+app.use("/api/v1/levels", levelsRoute);
+app.use("/api/v1/locations", locationsRoute);
+app.use('/api/v1/h_zones', highRiskZonesRoute);
+app.use('/api/v1/donations', donationsRoute);
+app.use('/api/v1/reports', reportsRoute);
 
 // app.get("/",(req,res) => {
 //     res.json({message: "Welcome to dms application. "});

@@ -4,9 +4,10 @@ const { v4: uuidv4 } = require('uuid');
 const Router = app.Router();
 const dbConnection = require('../config/db.config');
 const { Validator } = require('node-input-validator');
+const asyncHandler = require('../middleware/async');
 
 
-Router.get("/getAllreports", (req, res) => {
+module.exports.getReports = asyncHandler (async(req, res) => {
     dbConnection.query("SELECT * FROM dms_reports", (err, rows, fields) => {
         if (!err) {
             res.send(rows);
@@ -52,8 +53,8 @@ async function checkReportId(victim_id, high_risk_zone_id, callBack) {
     callBack(true)
 }
 
-
-Router.post("/createNewreport", function(req, res) {
+ 
+module.exports.createReport = asyncHandler(async (req, res) => {
 
     const validation = new Validator(req.body, {
         victim_id: 'required',
@@ -64,7 +65,7 @@ Router.post("/createNewreport", function(req, res) {
 
 
 
-    validation.check().then((matched) => {
+    validation.check().then(async(matched) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
@@ -78,10 +79,10 @@ Router.post("/createNewreport", function(req, res) {
             ]
             console.log(inserts[1]);
             console.log(inserts[4])
-            checkReportId(inserts[1], inserts[4], function(isFound) {
+            checkReportId(inserts[1], inserts[4], async function(isFound) {
                 if (isFound) {
                     let sql = "INSERT INTO dms_reports(report_id,victim_id,report_category,report_description,high_zone_area_if_available_id) VALUES (?);";
-                    dbConnection.query(sql, [inserts], (err, results, fields) => {
+                await    dbConnection.query(sql, [inserts], (err, results, fields) => {
 
                         if (err) {
 
@@ -105,8 +106,8 @@ Router.post("/createNewreport", function(req, res) {
 
     })
 })
-
-Router.put("/update/:id", (req, res) => {
+ 
+module.exports.updateReport = asyncHandler(async(req, res) => {
     let report_id = req.params['id'];
     report_id.trim();
     const validation = new Validator(req.body, {
@@ -119,7 +120,7 @@ Router.put("/update/:id", (req, res) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
-            checkReportId(inserts[3], function(isFound) {
+            checkReportId(inserts[3], async function(isFound) {
                 if (isFound) {
                     // console.log(report);
                     let inserts = {
@@ -136,7 +137,7 @@ Router.put("/update/:id", (req, res) => {
                         return res.status(400).send({ error: report, message: 'Please provide report and report id' });
                     }
 
-                    dbConnection.query("UPDATE dms_reports SET ?  WHERE report_id = ?", [inserts, report_id], function(error, results, fields) {
+                   await dbConnection.query("UPDATE dms_reports SET ?  WHERE report_id = ?", [inserts, report_id], function(error, results, fields) {
                         if (error) throw error;
                         else {
                             return res.send({ error: false, data: results, message: 'report has been updated successfully.' });
@@ -148,16 +149,15 @@ Router.put("/update/:id", (req, res) => {
     })
 })
 
-Router.delete('/delete/:id', (req, res) => {
+module.exports.deleteReport = asyncHandler(async (req, res) => {
     let report_id = req.params['id'];
     report_id.trim();
     if (!report_id) {
         return res.status(400).send({ error: true, message: 'Please provide a report id' });
     }
-    dbConnection.query('DELETE FROM dms_reports WHERE report_id = ?', [report_id], function(error, results, fields) {
+    await dbConnection.query('DELETE FROM dms_reports WHERE report_id = ?', [report_id], function(error, results, fields) {
         if (error) throw error;
         return res.send({ error: false, data: results, message: 'report has been delete successfully.' });
     });
 })
 
-module.exports = Router;
