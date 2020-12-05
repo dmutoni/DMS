@@ -38,7 +38,7 @@ module.exports.createUser = asyncHandler(async (req, res) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
-
+const password = hashPassword(req.body.password);
             let inserts = [
                 uuidv4(),
                 req.body.first_name,
@@ -47,7 +47,7 @@ module.exports.createUser = asyncHandler(async (req, res) => {
                 req.body.email,
                 req.body.phone_number,
                 req.body.national_id,
-                req.body.password,
+                password,
                 req.body.job_title,
                 req.body.address,
                 req.body.user_type,
@@ -82,7 +82,6 @@ module.exports.updateUser =  asyncHandler (async (req, res) => {
         age: 'required|integer|minLength:1',
         phone_number: 'required|integer|minLength:12|maxLength:12',
         national_id: 'required|integer|minLength:16|maxLength:16',
-        password: 'required',
         job_title: 'required',
         address: 'required',
         user_type: 'required'
@@ -99,7 +98,6 @@ module.exports.updateUser =  asyncHandler (async (req, res) => {
                 email: req.body.email,
                 phone_number: req.body.phone_number,
                 national_id: req.body.national_id,
-                password: req.body.password,
                 job_title: req.body.job_title,
                 address: req.body.address,
                 user_type: req.body.user_type,

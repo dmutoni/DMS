@@ -147,7 +147,7 @@ module.exports.deleteVictim = asyncHandler(async (req, res) => {
     }
     await dbConnection.query('DELETE FROM dms_victims WHERE victim_id = ?', [victim_id], function(error, results, fields) {
         if (error) throw error;
-        return res.send({ error: false, data: results, message: 'User has been delete successfully.' });
+        return res.send({ error: false, data: results, message: 'victim has been delete successfully.' });
     });
 })
 
