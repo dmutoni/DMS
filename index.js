@@ -67,7 +67,7 @@ app.use('/api/v1/h_zones', highRiskZonesRoute);
 app.use('/api/v1/donations', donationsRoute);
 app.use('/api/v1/reports', reportsRoute);
 
-// app.get("/",(req,res) => {
-//     res.json({message: "Welcome to dms application. "});
-// })
+app.get("/",(req,res) => {
+    res.json({message: "Welcome to dms application. "});
+})
 app.listen(PORT, () => console.log(`Express server running on port ${PORT} .`));
