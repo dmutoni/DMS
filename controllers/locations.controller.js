@@ -2,6 +2,7 @@ const { query } = require('express');
 const app = require('express');
 const Router = app.Router();
 const dbConnection = require('../config/db.config');
+const { Validator } = require('node-input-validator');
 
 Router.get('/getProvinces/',(req,res)=>{
     dbConnection.query("SELECT * FROM dms_provinces",(err,rows,fields)=>{
@@ -22,29 +23,33 @@ Router.get('/getProvinces/',(req,res)=>{
         }
     })
 })
-Router.get('/getProvincesById/:province_id',(req,res)=>{
-    let province_id = req.params.province_id;
-    dbConnection.query("SELECT * FROM dms_provinces WHERE province_id = ?",[province_id],(error,rows,fields)=>{
-        if(error){
-            return res.status(400).send({ data: rows[0], message: 'Bad request' })
+// Router.get('/getProvincesById/:province_id',(req,res)=>{
+//     let province_id = req.params.province_id;
+//     console.log("dsa" + req.params.province_id)
+//     if(province_id.length() == 0){
+//         console.log("province id not found");
+//         return res.status(400).send({message: "bad request"});
+//     }
+//     dbConnection.query("SELECT * FROM dms_provinces WHERE province_id = ?",[province_id],(error,rows,fields)=>{
+//         if(error){
+//             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
-        }
-        else if(!error) {
-             console.log(rows.length);
+//         }
+//         else if(!error) {
+//              console.log(rows.length);
 
-            if(rows.length === 0){
+//             if(rows.length === 0){
 
-                return res.status(404).send({message: 'province not found'})
-            }
-            else{
-                 return res.status(200).send({ data: rows[0] })
-            }
+//                 return res.status(404).send({message: 'province not found'})
+//             }
+//             else{
+//                  return res.status(200).send({ data: rows[0] })
+//             }
 
-            // return res.status
-        }
+//         }
 
-    })
-})
+//     })
+// })
 Router.get('/getDistricts/',(req,res)=>{
     dbConnection.query("SELECT * FROM dms_districts",(err,rows,fields)=>{
         if(!err){

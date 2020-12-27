@@ -29,7 +29,7 @@ module.exports.createLevel = asyncHandler(async (req, res) => {
 
     validation.check().then(async (matched) => {
         if (!matched) {
-            res.status(422).send(validation.errors);
+           return  res.status(422).send(validation.errors);
         } else if (matched) {
 
             let inserts = [

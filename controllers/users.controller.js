@@ -38,7 +38,7 @@ module.exports.createUser = asyncHandler(async (req, res) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
-const password = hashPassword(req.body.password);
+// const password = hashPassword(req.body.password);
             let inserts = [
                 uuidv4(),
                 req.body.first_name,
@@ -47,7 +47,7 @@ const password = hashPassword(req.body.password);
                 req.body.email,
                 req.body.phone_number,
                 req.body.national_id,
-                password,
+                req.body.password,
                 req.body.job_title,
                 req.body.address,
                 req.body.user_type,

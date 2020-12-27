@@ -38,6 +38,10 @@ const checkReportId =  (victim_id, high_risk_zone_id, callBack) => {
 
 }
 
+module.exports.getReportsBySector = async(req,res) => {
+    
+}
+
 module.exports.createReport = asyncHandler(async (req, res) => {
 
     const validation = new Validator(req.body, {
@@ -46,8 +50,6 @@ module.exports.createReport = asyncHandler(async (req, res) => {
         report_description: 'required',
 
     });
-
-
 
     validation.check().then(async (matched) => {
         if (!matched) {

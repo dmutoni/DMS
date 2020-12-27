@@ -2,6 +2,7 @@ const { query } = require('express');
 const app = require('express');
 const Router = app.Router();
 const dbConnection = require('../config/db.config');
+const { Validator } = require('node-input-validator');
 
 /**
  * @swagger
@@ -109,11 +110,20 @@ Router.get('/getProvinces/',(req,res)=>{
  *         description: Internal Server error
  */
 Router.get('/getProvincesById/:province_id',(req,res)=>{
+    const validation = new Validator(req.body, {
+        province_id: 'required'
+    });
+
+    if(!matched){
+        return res.status(422).send(validation.errors);
+    }
     let province_id = req.params.province_id;
+    if(!province_id){
+        return res.status(400).send({message: "bad request"});
+    }
     dbConnection.query("SELECT * FROM dms_provinces WHERE province_id = ?",[province_id],(error,rows,fields)=>{
         if(error){
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
-
         }
         else if(!error) {
              console.log(rows.length);
@@ -150,6 +160,9 @@ Router.get('/getProvincesById/:province_id',(req,res)=>{
  *       500:
  *         description: Internal Server error
  */
+// Router.post('/uploadHighRiskZonesImages'/(req,res) =>{
+
+// })
 Router.get('/getDistricts/',(req,res)=>{
     dbConnection.query("SELECT * FROM dms_districts",(err,rows,fields)=>{
         if(!err){

@@ -35,13 +35,13 @@ const {
  *       age:
  *         type: number
  *       email:
- *         type: email
+ *         type: string
  *       phone_number:
  *          type: string
  *       national_id:
  *          type: number
  *       password:
- *          type: password
+ *          type: string
  *       job_title:
  *          type: string
  *       address:

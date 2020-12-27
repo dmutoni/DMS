@@ -10,6 +10,7 @@ const dbConnection = require('./config/db.config');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
+const multer = require('multer');
 
 const PORT = process.env.PORT || 5000;
 
@@ -67,6 +68,30 @@ app.use('/api/v1/h_zones', highRiskZonesRoute);
 app.use('/api/v1/donations', donationsRoute);
 app.use('/api/v1/reports', reportsRoute);
 
+let storage  = multer.diskStorage({
+    destination: (req,file,cb) => {
+        cb(null, 'images')
+    },
+    filename: (req,file,cb) => {
+        console.log(file);
+        cb(null,file.originalname )
+    }
+})
+let upload = multer({ storage: storage })
+
+app.post('/api/v1/uploadHigh',upload.array('files',5),(req,res,next) => {
+    try {
+        console.log(req.files);
+        console.log(req.body.name);
+        return res.status(200).send({message: "successfully done"})
+    } catch (e) {
+        console.log(e);
+        fs.unlink('images'+req.file.filename, () => {
+            return res.status(404).send({message: "error occurred"})
+        })
+        return res.status(500).send({message: "error occurred"});
+    }      
+})
 app.get("/",(req,res) => {
     res.json({message: "Welcome to dms application. "});
 })

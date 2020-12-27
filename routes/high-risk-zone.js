@@ -4,10 +4,22 @@ const {
     create_h_zone, 
     update_h_zone,
     delete_h_zone, 
+    upload,
+    create_h_images,
     get_h_zone } = require('../controllers/high-risk-zone.controller')
     // const { route } = require('./_h_zoneTypes')
 
 const router = express.Router({ mergeParams: true })
+/**
+ * @swagger
+ * definitions:
+ *   h_zone_image:
+ *     required: 
+ *       h_zone_image
+ *     properties:
+ *       files
+ */
+
 /**
  * @swagger
  * definitions:
@@ -54,17 +66,41 @@ const router = express.Router({ mergeParams: true })
 router.route('/').get(get_h_zones)
 /**
  * @swagger
+ * /api/v1/h_zones/images/{id}:
+ *   post:
+ *    tags:
+ *      - h_zone
+ *    description: Create a new h_zone image
+ *    consumes:
+ *      - multipart/form-data
+ *    parameters:
+ *      - name: id
+ *        in: path
+ *        required: true
+ *      - name: files
+ *        in: formData
+ *        type: file
+ *        description: The file to upload
+ *    responses:
+ *      201:
+ *        description: created
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
+router.route('/').post(create_h_zone)
+/**
+ * @swagger
  * /api/v1/h_zones:
  *   post:
  *    tags:
  *      - h_zone
- *    description: Create a h_zone
+ *    description: Create a new h_zone 
  *    consumes:
  *      - "application/json"
  *      - "application/xml"
- *    produces:
- *      - "application/xml"
- *      - "application/json"
  *    parameters:
  *      - name: body
  *        description: Fields for a h_zone
@@ -81,7 +117,8 @@ router.route('/').get(get_h_zones)
  *        description: Internal Server error
  */
 
-router.route('/').post(create_h_zone)
+router.route('/images/:id').post([upload.array('files',5),create_h_images])
+
 /**
  * @swagger
  * /api/v1/h_zones/{h_zone_id}:
@@ -104,7 +141,7 @@ router.route('/').post(create_h_zone)
  *        in: body
  *        required: true
  *        schema:
- *          $ref: '#/definitions/h_zone'
+ *          $ref: '#/definitions/h_zone_image'
  *    responses:
  *      201:
  *        description: updated
