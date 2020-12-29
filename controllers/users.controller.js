@@ -8,13 +8,18 @@ const asyncHandler = require('../middleware/async');
 // let  payloadChecker = require('payload-validator');
 
 module.exports.getUsers = asyncHandler(async (req, res) => { 
+    try {
         await dbConnection.query("SELECT * FROM dms_users", (err, rows, fields) => {
             if (!err) {
-                res.send({success: true, data:rows});
+               return res.status(200).send({success: true, data:rows});
             } else {
-                res.send({success: false, data: err })
+               return res.status(400).send({success: false, data: err })
             }
         })
+    } catch (error) {
+        return res.status(500).send({error: "internal server error"})
+    }
+
     })
     // const generateId = () => uuidv4()
 module.exports.createUser = asyncHandler(async (req, res) => {
