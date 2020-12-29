@@ -114,7 +114,7 @@ Router.get('/getProvincesById/:province_id',(req,res)=>{
         province_id: 'required'
     });
 
-    if(!matched){
+    if(!validation){
         return res.status(422).send(validation.errors);
     }
     let province_id = req.params.province_id;
@@ -166,14 +166,14 @@ Router.get('/getProvincesById/:province_id',(req,res)=>{
 Router.get('/getDistricts/',(req,res)=>{
     dbConnection.query("SELECT * FROM dms_districts",(err,rows,fields)=>{
         if(!err){
-            res.send(rows);
+            // res.send(rows);
             
             if(rows.length === 0){
 
                 return res.status(404).send({message: 'No records found in the found'})
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({ data: rows })
             }
 
         }

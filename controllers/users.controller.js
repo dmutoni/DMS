@@ -10,9 +10,9 @@ const asyncHandler = require('../middleware/async');
 module.exports.getUsers = asyncHandler(async (req, res) => { 
         await dbConnection.query("SELECT * FROM dms_users", (err, rows, fields) => {
             if (!err) {
-                res.send(rows);
+                res.send({success: true, data:rows});
             } else {
-                console.log(err);
+                res.send({success: false, data: err })
             }
         })
     })

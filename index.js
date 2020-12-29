@@ -11,6 +11,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
 const multer = require('multer');
+const morgan = require('morgan');
 
 const PORT = process.env.PORT || 5000;
 
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 5000;
 let app = express();
 // configure cors
 
+app.use(morgan('dev'));
 // app.use(cors());
 const bodyparser = require('body-parser');
 

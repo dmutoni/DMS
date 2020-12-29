@@ -4,7 +4,8 @@ const {
     createReport, 
     updateReport,
     deleteReport, 
-    getReport } = require('../controllers/reports.controller')
+    getReport, 
+    getReportsBySector} = require('../controllers/reports.controller')
     // const { route } = require('./ReportTypes')
 
 const router = express.Router({ mergeParams: true })
@@ -143,5 +144,7 @@ router.route('/:id').put(updateReport)
  *        description: Internal Server error
  */
 router.route('/:id').delete(deleteReport)
+
+router.route('/:id').get(getReportsBySector)
 
 module.exports = router
