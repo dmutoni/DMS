@@ -520,7 +520,7 @@ Router.get('/getCellsBySectors/:sector_id',(req,res)=>{
 *         description: Internal Server error
 */
 Router.get('/getVillages',(req,res) => {
-    dbConnection.query("SELECT * FROM dms_villages",(err,rows,fields)=>{
+    dbConnection.query("SELECT * FROM dms_villages LIMIT 10",(err,rows,fields)=>{
         try {
             if(!err){
         
@@ -609,7 +609,7 @@ Router.get('/getVillageById/:village_id',(req,res)=>{
 */
 Router.get('/getVillagesByCells/:cell_id',(req,res)=>{
     let cell_id = req.params.cell_id;
-    dbConnection.query("SELECT * FROM dms_cells WHERE cell_id = ?",[cell_id],(error,rows,fields)=>{
+    dbConnection.query("SELECT * FROM dms_villages WHERE cell_id = ?",[cell_id],(error,rows,fields)=>{
         if(error){
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
@@ -649,4 +649,39 @@ Router.get('/getVillagesByCells/:cell_id',(req,res)=>{
 *       500:
 *         description: Internal Server error
 */
+
+Router.get('/getAllLocations/',(req,res)=>{
+    dbConnection.query("SELECT * FROM dms_provinces JOIN dms_districts ON (dms_districts.province_id = dms_provinces.province_id) JOIN dms_sectors ON (dms_sectors.district_id = dms_districts.district_id) JOIN dms_cells ON (dms_cells.sector_id = dms_sectors.sector_id) JOIN dms_villages ON (dms_villages.cell_id = dms_cells.cell_id)",(err,rows,fields)=>{
+        if(!err){
+            
+            
+            if(rows.length === 0){
+
+                return res.status(404).send({success: false, message: 'No records found in the found'})
+            }
+            else{
+                 return res.status(200).send({success:true, data: rows })
+            }
+
+        }
+        else{
+            throw err;
+        }
+    })
+})
+ /**
+ * @swagger
+ * /api/v1/locations/getAllLocations/:
+ *   get:
+ *     tags:
+ *       - locations
+ *     description: Get all locations
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server error
+ */
 module.exports = Router;

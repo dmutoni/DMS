@@ -1,58 +1,60 @@
 const express = require('express')
-const { 
-    getUsers, 
-    createUser, 
+const {
+    getUsers,
+    createUser,
     updateUser,
-    deleteUser, 
-    getUserById } = require('../controllers/users.controller')
-    // const { route } = require('./UserTypes')
- /**
- * @swagger
- * definitions:
- *   users:
- *     required:          
- *       - first_name
- *       - last_name
- *       - gender
- *       - age
- *       - job_title
- *       - last_name
- *       - password
- *       - phone_number
- *       - national_id
- *       - user_type
- *       - user_status
- *     properties:
- *       user_id:
- *         type: string
- *       first_name:
- *         type: string
- *       last_name:
- *         type: string
- *       gender:
- *         type: string
- *         enum: [FEMALE,MALE]
- *       age:
- *         type: number
- *       email:
- *         type: string
- *       phone_number:
- *          type: string
- *       national_id:
- *          type: number
- *       password:
- *          type: string
- *       job_title:
- *          type: string
- *       address:
- *          type: string
- *       user_type:
- *          type: string
- *          enum: ['DISTRICT', 'SECTOR', 'NATIONAL']
- *       user_status:
- *          type: string 
- *          enum: ['ACTIVE', 'INACTIVE']
- */ 
+    deleteUser,
+    getUserById,
+    createUSerSignature,
+    createLevelSignature } = require('../controllers/users.controller')
+const { upload } = require('../functions/insertFile')
+const {CREATE_DIR} = require('../middleware/createUploadDirectory')
+// const { route } = require('./UserTypes')
+/**
+* @swagger
+* definitions:
+*   users:
+*     required:          
+*       - first_name
+*       - last_name
+*       - gender
+*       - age
+*       - job_title
+*       - last_name
+*       - password
+*       - phone_number
+*       - national_id
+*       - user_type
+*       - user_status
+*     properties:
+*       first_name:
+*         type: string
+*       last_name:
+*         type: string
+*       gender:
+*         type: string
+*         enum: [FEMALE,MALE]
+*       age:
+*         type: number
+*       email:
+*         type: string
+*       phone_number:
+*          type: string
+*       national_id:
+*          type: number
+*       password:
+*          type: string
+*       job_title:
+*          type: string
+*       sector_id:
+*          type: string
+*       user_type:
+*          type: string
+*          enum: ['DISTRICT', 'SECTOR', 'NATIONAL']
+*       user_status:
+*          type: string 
+*          enum: ['ACTIVE', 'INACTIVE']
+*/
 const router = express.Router({ mergeParams: true })
 /**
  * @swagger
@@ -194,4 +196,7 @@ router.route('/:id').put(updateUser)
  */
 router.route('/deleteUser/:id').put(deleteUser)
 
+router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
+
+router.route('/addLevelsStamp/:user_id').put([CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
 module.exports = router

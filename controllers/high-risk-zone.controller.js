@@ -51,16 +51,6 @@ function checkUserId(user_id, callBack) {
     })
 }
 
-let storage  = multer.diskStorage({
-    destination: (req,file,cb) => {
-        cb(null, 'images')
-    },
-    filename: (req,file,cb) => {
-        console.log(file);
-        cb(null,file.originalname )
-    }
-})
-exports.upload = multer({ storage: storage })
 
 module.exports.create_h_images = async(req,res) => {
     let user_response;

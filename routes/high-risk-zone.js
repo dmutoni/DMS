@@ -4,10 +4,12 @@ const {
     create_h_zone, 
     update_h_zone,
     delete_h_zone, 
-    upload,
     create_h_images,
     get_h_zoneById,
     get_h_zone } = require('../controllers/high-risk-zone.controller')
+
+const { upload } = require('../functions/insertFile');
+const { CREATE_DIR } = require('../middleware/createUploadDirectory');
     // const { route } = require('./_h_zoneTypes')
 
 const router = express.Router({ mergeParams: true })
@@ -118,7 +120,7 @@ router.route('/').post(create_h_zone)
  *        description: Internal Server error
  */
 
-router.route('/images/:id').post([upload.array('files',5),create_h_images])
+router.route('/images/:id').post([CREATE_DIR("hZoneImages"),upload.array('files',5),create_h_images])
 
 /**
  * @swagger
