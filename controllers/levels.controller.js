@@ -16,6 +16,19 @@ module.exports.getLevels =  asyncHandler( async (req, res) => {
         }
     })
 })
+module.exports.getLevelsById = asyncHandler(async(req,res) => {
+    let level_id = req.params['id'];
+    level_id.trim();
+   
+   dbConnection.query("SELECT * FROM dms_levels WHERE level_id = ?",
+    [user_id],function (err, rowsFound, fields) {
+        if (!err) {
+          return res.send({success: true, data: rowsFound});
+        } else {
+           return res.send({success: false, data: err})
+        }
+    })
+})
 module.exports.createLevel = asyncHandler(async (req, res) => {
 
     const validation = new Validator(req.body, {

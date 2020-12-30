@@ -27,6 +27,19 @@ function checkReportId(report_id, callBack) {
     })
 }
 
+module.exports.getDonationById = asyncHandler(async(req,res) => {
+    let donation_id = req.params['id'];
+    donation_id.trim();
+   
+   dbConnection.query("SELECT * FROM dms_levels WHERE donation_id = ?",
+    [donation_id],function (err, rowsFound, fields) {
+        if (!err) {
+          return res.send({success: true, data: rowsFound});
+        } else {
+           return res.send({success: false, data: err})
+        }
+    })
+})
  
 module.exports.createDonation = asyncHandler(async(req, res) => { 
 

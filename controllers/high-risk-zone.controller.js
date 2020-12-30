@@ -8,11 +8,26 @@ const asyncHandler = require('../middleware/async');
 
 
 module.exports.get_h_zones = asyncHandler(async (req, res) => {
-   await dbConnection.query("SELECT * FROM dms_high_risk_zones", (err, rows, fields) => {
+   await dbConnection.query("SELECT * FROM  dms_h_zone_images JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id)", (err, rows, fields) => {
         if (!err) {
             res.send(rows);
         } else {
             console.log(err);
+        }
+    })
+})
+
+
+module.exports.get_h_zoneById = asyncHandler(async(req,res) => {
+    let h_zone_id = req.params['id'];
+    h_zone_id.trim();
+    
+   dbConnection.query("SELECT * FROM  dms_h_zone_images JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id) WHERE h_zone_id = ?",
+    [h_zone_id],function (err, rowsFound, fields) {
+        if (!err) {
+          return res.send({success: true, data: rowsFound});
+        } else {
+           return res.send({success: false, data: err})
         }
     })
 })

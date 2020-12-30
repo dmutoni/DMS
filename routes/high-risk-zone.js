@@ -6,6 +6,7 @@ const {
     delete_h_zone, 
     upload,
     create_h_images,
+    get_h_zoneById,
     get_h_zone } = require('../controllers/high-risk-zone.controller')
     // const { route } = require('./_h_zoneTypes')
 
@@ -180,5 +181,36 @@ router.route('/:id').put(update_h_zone)
  */
 
 router.route('/:id').delete(delete_h_zone)
+
+router.route('/getHighRiskZoneById/:id').get(get_h_zoneById)
+
+/**
+ * @swagger
+ * /api/v1/h_zone/getHighRiskZoneById/{h_zone_id}:
+ *   get:
+ *    tags:
+ *      - h_zone
+ *    description: get a high risk zone by id 
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "h_zone_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/h_zone'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 
 module.exports = router

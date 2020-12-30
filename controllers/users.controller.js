@@ -21,9 +21,21 @@ module.exports.getUsers = asyncHandler(async (req, res) => {
     }
 
     })
+module.exports.getUserById = asyncHandler(async(req,res) => {
+        let user_id = req.params['id'];
+        user_id.trim();
+       
+       dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
+        [user_id],function (err, rowsFound, fields) {
+            if (!err) {
+              return res.send({success: true, data: rowsFound});
+            } else {
+               return res.send({success: false, data: err})
+            }
+        })
+    })
     // const generateId = () => uuidv4()
 module.exports.createUser = asyncHandler(async (req, res) => {
-    console.log("amadeni");
 
     const validation = new Validator(req.body, {
         first_name: 'required',

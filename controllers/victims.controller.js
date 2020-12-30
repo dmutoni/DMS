@@ -27,6 +27,20 @@ module.exports.getVictims = asyncHandler(async (req,res) => {
     })
 })
 
+module.exports.getVictimById = asyncHandler(async(req,res) => {
+    let victim_id = req.params['id'];
+    victim_id.trim();
+    
+   dbConnection.query("SELECT * FROM dms_victims WHERE victim_id = ?",
+    [victim_id],function (err, rowsFound, fields) {
+        if (!err) {
+          return res.send({success: true, data: rowsFound});
+        } else {
+           return res.send({success: false, data: err})
+        }
+    })
+})
+
 // const generateId = () => uuidv4() 
 module.exports.createVictim = asyncHandler(async(req, res) => {
 

@@ -4,7 +4,7 @@ const {
     createUser, 
     updateUser,
     deleteUser, 
-    getUser } = require('../controllers/users.controller')
+    getUserById } = require('../controllers/users.controller')
     // const { route } = require('./UserTypes')
  /**
  * @swagger
@@ -98,6 +98,38 @@ router.route('/').get(getUsers)
  *      500:
  *        description: Internal Server error
  */
+
+
+router.route('/getUserId/:id').get(getUserById)
+
+/**
+ * @swagger
+ * /api/v1/users/getUserId/{user_id}:
+ *   get:
+ *    tags:
+ *      - users
+ *    description: get user by id 
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "user_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/users'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 router.route('/').post(createUser)
 /**
  * @swagger

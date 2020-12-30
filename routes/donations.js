@@ -3,7 +3,8 @@ const {
     getDonations, 
     createDonation, 
     updateDonation,
-    deleteDonation, 
+    deleteDonation,
+    getDonationById, 
     getDonation } = require('../controllers/donations.contoller')
     // const { route } = require('./DonationTypes')
 
@@ -139,5 +140,36 @@ router.route('/:id').put(updateDonation)
  *        description: Internal Server error
  */
 router.route('/:id').delete(deleteDonation)
+
+router.route('/getDonationsById/:id').get(getDonationById)
+
+/**
+ * @swagger
+ * /api/v1/users/getDonationsById/{donation_id}:
+ *   get:
+ *    tags:
+ *      - donations
+ *    description: get donation by id 
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "donation_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/donations'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 
 module.exports = router

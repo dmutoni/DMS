@@ -4,6 +4,7 @@ const {
     createVictim, 
     updateVictim,
     deleteVictim, 
+    getVictimById,
     getVictim } = require('../controllers/victims.controller')
     // const { route } = require('./VictimTypes')
   /**
@@ -169,5 +170,36 @@ router.route('/:id').put(updateVictim)
  */
 
 router.route('/:id').delete(deleteVictim)
+
+
+router.route('/getVictimById:id').get(getVictimById)
+/**
+ * @swagger
+ * /api/v1/reports/getVictimById/{victim_id}:
+ *   get:
+ *    tags:
+ *      - victims
+ *    description: get victim by id 
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "victim_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/victims'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 
 module.exports = router

@@ -4,7 +4,8 @@ const {
     createLevel, 
     updateLevel,
     deleteLevel, 
-    getLevel } = require('../controllers/levels.controller')
+    getLevelsById
+ } = require('../controllers/levels.controller')
     // const { route } = require('./LevelTypes')
 
     const router = express.Router({ mergeParams: true })
@@ -139,6 +140,38 @@ router.route('/:id').put(updateLevel)
  *        description: Internal Server error
  */
 router.route('/').delete(deleteLevel)
+
+
+router.route('/getLevelById/:id').get(getLevelsById)
+
+
+/**
+ * @swagger
+ * /api/v1/levels/getLevelById/{level_id}:
+ *   get:
+ *    tags:
+ *      - levels
+ *    description: get level by id 
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "level_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/levels'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
 
 
 module.exports = router
