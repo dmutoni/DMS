@@ -79,7 +79,7 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
                 } else {
                     console.log(results)
                         // results.send("row inserted");
-                    return res.status(201).json({ error: false, data: results, message: 'New user has been created successfully.' });
+                    return res.status(201).json({ success:true , data: results, message: 'New user has been created successfully.' });
                     // console.log("Row inserted: "+ results.affectedRows);
                 }
             });

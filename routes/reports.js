@@ -145,6 +145,6 @@ router.route('/:id').put(updateReport)
  */
 router.route('/:id').delete(deleteReport)
 
-router.route('/:id').get(getReportsBySector)
+router.route('/getReportsBySector/:id').get(getReportsBySector)
 
 module.exports = router

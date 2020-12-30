@@ -10,9 +10,9 @@ const asyncHandler = require('../middleware/async');
 module.exports.getReports = asyncHandler(async (req, res) => {
     dbConnection.query("SELECT * FROM dms_reports", (err, rows, fields) => {
         if (!err) {
-            res.send(rows);
+            res.send({status: true, data: rows});
         } else {
-            console.log(err);
+            res.send({status: false, data: err})
         }
     })
 })
@@ -39,8 +39,20 @@ const checkReportId =  (victim_id, high_risk_zone_id, callBack) => {
 }
 
 module.exports.getReportsBySector = async(req,res) => {
-    
+    let report_id = req.params['id'];
+    report_id.trim();
+   
+   dbConnection.query("SELECT * FROM dms_reports JOIN dms_victims ON (dms_reports.victim_id = dms_victims.victim_id) JOIN dms_villages ON (dms_villages.village_id = dms_victims.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id)JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) WHERE dms_sectors.sector_id = ?",
+    [report_id],function (err, rowsFound, fields) {
+        if (!err) {
+            res.send({status: true, data: rowsFound});
+        } else {
+            res.send({status: false, data: err})
+        }
+    })
+    // console.log(report_id)
 }
+
 
 module.exports.createReport = asyncHandler(async (req, res) => {
 
@@ -53,7 +65,7 @@ module.exports.createReport = asyncHandler(async (req, res) => {
 
     validation.check().then(async (matched) => {
         if (!matched) {
-            res.status(422).send(validation.errors);
+           return res.status(422).send(validation.errors);
         } else if (matched) {
 
             let inserts = [
@@ -82,7 +94,7 @@ module.exports.createReport = asyncHandler(async (req, res) => {
                         }
                     });
                 } else {
-                    res.status(404).send({ message: "Data not found" })
+                    res.status(404).send({success: false, message: "one of the id entered is not found" })
                     // console.log('Data not found');
                 }
             });
@@ -97,21 +109,19 @@ module.exports.updateReport = asyncHandler(async (req, res) => {
     let report_id = req.params['id'];
     report_id.trim();
     const validation = new Validator(req.body, {
-        report_id: 'required',
         victim_id: 'required',
         report_category: 'required',
         report_description: 'required'
     });
     validation.check().then((matched) => {
         if (!matched) {
-            res.status(422).send(validation.errors);
+           return res.status(422).send(validation.errors);
         } else if (matched) {
             checkReportId(inserts[3], async function (isFound) {
                 if (isFound) {
                     // console.log(report);
                     let inserts = {
                         report_id: req.params.id,
-                        report_id: req.body.report_id,
                         victim_id: req.body.victim_id,
                         report_category: req.body.report_category,
                         report_description: req.body.report_description,

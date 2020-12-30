@@ -78,14 +78,14 @@ const { Validator } = require('node-input-validator');
 Router.get('/getProvinces/',(req,res)=>{
     dbConnection.query("SELECT * FROM dms_provinces",(err,rows,fields)=>{
         if(!err){
-            res.send(rows);
+            
             
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No records found in the found'})
+                return res.status(404).send({success: false, message: 'No records found in the found'})
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({success:true, data: rows })
             }
 
         }
@@ -119,7 +119,7 @@ Router.get('/getProvincesById/:province_id',(req,res)=>{
     }
     let province_id = req.params.province_id;
     if(!province_id){
-        return res.status(400).send({message: "bad request"});
+        return res.status(400).send({success: false, message: "bad request"});
     }
     dbConnection.query("SELECT * FROM dms_provinces WHERE province_id = ?",[province_id],(error,rows,fields)=>{
         if(error){
@@ -130,10 +130,10 @@ Router.get('/getProvincesById/:province_id',(req,res)=>{
 
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'province not found'})
+                return res.status(404).send({success: false,message: 'province not found'})
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({success: true, data: rows[0] })
             }
 
             // return res.status
@@ -170,10 +170,10 @@ Router.get('/getDistricts/',(req,res)=>{
             
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No records found in the found'})
+                return res.status(404).send({success: false, message: 'No records found in the found'})
             }
             else{
-                 return res.status(200).send({ data: rows })
+                 return res.status(200).send({success: true, data: rows })
             }
 
         }
@@ -208,11 +208,11 @@ Router.get('/getDistrictById/:district_id',(req,res)=>{
              console.log(district_id);
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'district not found'})
+                return res.status(404).send({success: false,message: 'district not found'})
                 
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({success:true, data: rows[0] })
             }
 
             // return res.status
@@ -250,11 +250,11 @@ Router.get('/getDistrictsByProvince/:province_id',(req,res)=>{
 
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No districts with that province id not found'})
+                return res.status(404).send({success: false, message: 'No districts with that province id not found'})
                 
             }
             else{
-                 return res.status(200).send({ data: rows })
+                 return res.status(200).send({success:true, data: rows })
             }
 
             // return res.status
@@ -284,14 +284,14 @@ Router.get('/getDistrictsByProvince/:province_id',(req,res)=>{
 Router.get('/getSectors',(req,res) => {
     dbConnection.query("SELECT * FROM dms_sectors",(err,rows,fields)=>{
         if(!err){
-            res.send(rows);
+           
             
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No records found in the found'})
+                return res.status(404).send({success: false , message: 'No records found in the found'})
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({success: true, data: rows })
             }
 
         }
@@ -327,11 +327,11 @@ Router.get('/getSectorById/:sector_id',(req,res)=>{
 
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'sector not found'})
+                return res.status(404).send({success: false, message: 'sector not found'})
                 
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({success: true, data: rows[0] })
             }
 
             // return res.status
@@ -369,11 +369,11 @@ Router.get('/getSectorsByDistricts/:district_id',(req,res)=>{
 
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No sectors with that district id not found'})
+                return res.status(404).send({ success: false, message: 'No sectors with that district id not found'})
                 
             }
             else{
-                 return res.status(200).send({ data: rows })
+                 return res.status(200).send({success: true, data: rows })
             }
 
             // return res.status
@@ -403,14 +403,14 @@ Router.get('/getSectorsByDistricts/:district_id',(req,res)=>{
 Router.get('/getCells',(req,res)=>{
     dbConnection.query("SELECT * FROM dms_cells",(err,rows,fields)=>{
         if(!err){
-            res.send(rows);
+           
             
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No records found in the found'})
+                return res.status(404).send({success: false, message: 'No records found in the found'})
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({success: true, data: rows})
             }
 
         }
@@ -446,11 +446,11 @@ Router.get('/getCellById/:cell_id',(req,res)=>{
 
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'cell not found'})
+                return res.status(404).send({success: false, message: 'cell not found'})
                 
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                 return res.status(200).send({success: true, data: rows[0] })
             }
 
             // return res.status
@@ -488,11 +488,11 @@ Router.get('/getCellsBySectors/:sector_id',(req,res)=>{
 
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No cells with that sector id not found'})
+                return res.status(404).send({success:false, message: 'No cells with that sector id not found'})
                 
             }
             else{
-                 return res.status(200).send({ data: rows })
+                 return res.status(200).send({success: true, data: rows })
             }
 
             // return res.status
@@ -521,21 +521,26 @@ Router.get('/getCellsBySectors/:sector_id',(req,res)=>{
 */
 Router.get('/getVillages',(req,res) => {
     dbConnection.query("SELECT * FROM dms_villages",(err,rows,fields)=>{
-        if(!err){
-            res.send(rows);
+        try {
+            if(!err){
+        
             
-            if(rows.length === 0){
-
-                return res.status(404).send({message: 'No records found in the found'})
+                if(rows.length === 0){
+    
+                    return res.status(404).send({success: false, message: 'No records found in the found'})
+                }
+                else{
+                     return res.status(200).send({success: true,data: rows })
+                }
+    
             }
             else{
-                 return res.status(200).send({ data: rows[0] })
+                throw err;
             }
+        } catch (error) {
+            return res.status(500).send({success: false, data: "internal server error"});
+        }
 
-        }
-        else{
-            throw err;
-        }
     })
 })
 /**
@@ -554,28 +559,34 @@ Router.get('/getVillages',(req,res) => {
  *         description: Internal Server error
  */
 Router.get('/getVillageById/:village_id',(req,res)=>{
-    let village_id = req.params.village_id;
-    dbConnection.query("SELECT * FROM dms_villages WHERE village_id = ?",[village_id],(error,rows,fields)=>{
-        if(error){
-            return res.status(400).send({ data: rows[0], message: 'Bad request' })
-
-        }
-        else if(!error) {
-             console.log(rows.length);
-
-            if(rows.length === 0){
-
-                return res.status(404).send({message: 'village not found'})
-                
+    try {
+        let village_id = req.params.village_id;
+        dbConnection.query("SELECT * FROM dms_villages WHERE village_id = ?",[village_id],(error,rows,fields)=>{
+            if(error){
+                return res.status(400).send({ data: rows[0], message: 'Bad request' })
+    
             }
-            else{
-                 return res.status(200).send({ data: rows[0] })
+            else if(!error) {
+                 console.log(rows.length);
+    
+                if(rows.length === 0){
+    
+                    return res.status(404).send({success: false, message: 'village not found'})
+                    
+                }
+                else{
+                     return res.status(200).send({success: true, data: rows[0] })
+                }
+    
+                // return res.status
             }
+    
+        })
+    }
 
-            // return res.status
-        }
-
-    })
+    catch (error) {
+        return res.send({success:false, data: "internal server error"})
+    }
 })
 /**
 * @swagger
@@ -607,11 +618,11 @@ Router.get('/getVillagesByCells/:cell_id',(req,res)=>{
 
             if(rows.length === 0){
 
-                return res.status(404).send({message: 'No villages with that cell id not found'})
+                return res.status(404).send({success: false, message: 'No villages with that cell id not found'})
                 
             }
             else{
-                 return res.status(200).send({ data: rows })
+                 return res.status(200).send({success: true, data: rows })
             }
 
             // return res.status
