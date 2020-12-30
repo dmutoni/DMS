@@ -53,7 +53,19 @@ module.exports.getReportsBySector = async(req,res) => {
     // console.log(report_id)
 }
 
-
+module.exports.getReportsById = asyncHandler(async(req,res) => {
+    let report_id = req.params['id'];
+    report_id.trim();
+   
+   dbConnection.query("SELECT * FROM dms_reports WHERE report_id = ?",
+    [report_id],function (err, rowsFound, fields) {
+        if (!err) {
+            res.send({status: true, data: rowsFound});
+        } else {
+            res.send({status: false, data: err})
+        }
+    })
+})
 module.exports.createReport = asyncHandler(async (req, res) => {
 
     const validation = new Validator(req.body, {

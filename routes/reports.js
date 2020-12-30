@@ -5,7 +5,8 @@ const {
     updateReport,
     deleteReport, 
     getReport, 
-    getReportsBySector} = require('../controllers/reports.controller')
+    getReportsBySector,
+    getReportsById} = require('../controllers/reports.controller')
     // const { route } = require('./ReportTypes')
 
 const router = express.Router({ mergeParams: true })
@@ -145,6 +146,63 @@ router.route('/:id').put(updateReport)
  */
 router.route('/:id').delete(deleteReport)
 
+router.route('/getReportsById/:id').get(getReportsById)
+/**
+ * @swagger
+ * /api/v1/reports/getReportsBySector/{report_id}:
+ *   get:
+ *    tags:
+ *      - reports
+ *    description: get reports by sector 
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "report_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/reports'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 router.route('/getReportsBySector/:id').get(getReportsBySector)
+/**
+ * @swagger
+ * /api/v1/reports/getReportsBySector/{sector_id}:
+ *   get:
+ *    tags:
+ *      - reports
+ *    description: get reports by sector 
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "sector_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/reports'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 
 module.exports = router
