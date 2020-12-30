@@ -6,7 +6,8 @@ const {
     deleteReport, 
     getReport, 
     getReportsBySector,
-    getReportsById} = require('../controllers/reports.controller')
+    getReportsById,
+    returnVictimReportJoined} = require('../controllers/reports.controller')
     // const { route } = require('./ReportTypes')
 
 const router = express.Router({ mergeParams: true })
@@ -16,7 +17,7 @@ const router = express.Router({ mergeParams: true })
  *   reports:
  *     required:          
  *       - victim_id
- *       - report_category
+ *       - report_title
  *       - report_description
  *       - high_zone_area_if_available_id
  *       - status
@@ -25,7 +26,7 @@ const router = express.Router({ mergeParams: true })
  *         type: string
  *       victim_id:
  *         type: string
- *       report_category:
+ *       report_title:
  *         type: number
  *       high_zone_area_if_available_id:
  *          type: string
@@ -202,6 +203,25 @@ router.route('/getReportsBySector/:id').get(getReportsBySector)
  *        description: Not found
  *      500:
  *        description: Internal Server error
+ */
+
+ router.route('/getReportsNamesVictimsJoined').get(returnVictimReportJoined);
+
+ 
+/**
+ * @swagger
+ * /api/v1/reports/getReportsNamesVictimsJoined:
+ *   get:
+ *     tags:
+ *       - reports
+ *     description: Get all reports
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server error
  */
 
 
