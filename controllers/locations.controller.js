@@ -306,7 +306,7 @@ Router.get('/getVillagesByCells/:cell_id',(req,res)=>{
                 
             }
             else{
-                 return res.status(200).send({ data: rows })
+                 return res.status(200).send({success: true,  data: rows })
             }
 
             // return res.status

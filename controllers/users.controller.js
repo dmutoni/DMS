@@ -190,16 +190,19 @@ module.exports.createUSerSignature = async (req, res) => {
 }
 
 module.exports.createLevelSignature = async(req,res) => {
+    let user_category;
     if (!req.params) {
         return res.status(400).send({ success: false, data: "no provided id" })
     }
     let user_id = req.params['user_id'];
     user_id.trim();
 
-    dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
+    dbConnection.query("SELECT user_type FROM dms_users WHERE user_id = ?",
     [user_id], function (err, rowsFound, fields) {
         if (!err) {
-            return res.send({ success: true, data: rowsFound });
+            user_category = rowsFound;
+            console.log(user_category)
+            return res.send({ success: true, data: user_category });
         } else {
             return res.send({ success: false, data: err })
         }
