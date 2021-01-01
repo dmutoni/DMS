@@ -7,7 +7,9 @@ const {
     getReport, 
     getReportsBySector,
     getReportsById,
-    returnVictimReportJoined} = require('../controllers/reports.controller')
+    returnVictimReportJoined,
+    pushReportToDistrict,
+    pushReportToNationalLevel} = require('../controllers/reports.controller')
     // const { route } = require('./ReportTypes')
 
 const router = express.Router({ mergeParams: true })
@@ -177,6 +179,11 @@ router.route('/getReportsById/:id').get(getReportsById)
  */
 
 router.route('/getReportsBySector/:id').get(getReportsBySector)
+
+router.route('/pushReportToDistrictLevel/:id').put(pushReportToDistrict)
+
+router.route('/pushReportToNationalLevel/:id').put(pushReportToNationalLevel)
+
 /**
  * @swagger
  * /api/v1/reports/getReportsBySector/{sector_id}:

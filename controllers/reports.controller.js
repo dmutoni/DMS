@@ -71,7 +71,6 @@ module.exports.createReport = asyncHandler(async (req, res) => {
         victim_id: 'required',
         report_title: 'required',
         report_description: 'required',
-
     });
 
     validation.check().then(async (matched) => {
@@ -178,3 +177,30 @@ module.exports.returnVictimReportJoined = asyncHandler(async(req,res) =>{
         }
     })
 })
+
+module.exports.pushReportToDistrict = async(req,res) => {
+    let report_id = req.params['id'];
+    report_id.trim();
+    if (!req.params) {
+        return res.status(400).send({ success: false, data: "no provided id" })
+    }
+     await dbConnection.query("UPDATE dms_reports SET state = ?  WHERE report_id = ?", [1, report_id], function (error, results, fields) {
+        if (error) throw error;
+            else {
+                return res.send({ error: false, data: results, message: 'report has been pushed to district successfully.' });
+            }
+    })
+}
+module.exports.pushReportToNationalLevel = async(req,res) => {
+    let report_id = req.params['id'];
+    report_id.trim();
+    if (!req.params) {
+        return res.status(400).send({ success: false, data: "no provided id" })
+    }
+     await dbConnection.query("UPDATE dms_reports SET state = ?  WHERE report_id = ?", [2, report_id], function (error, results, fields) {
+        if (error) throw error;
+            else {
+                return res.send({ error: false, data: results, message: 'report has been pushed to district successfully.' });
+            }
+    })
+}

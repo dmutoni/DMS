@@ -9,7 +9,7 @@ const asyncHandler = require('../middleware/async');
 
 module.exports.getUsers = asyncHandler(async (req, res) => {
     try {
-        await dbConnection.query("SELECT * FROM dms_users", (err, rows, fields) => {
+        await dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)", (err, rows, fields) => {
             if (!err) {
                 return res.status(200).send({ success: true, data: rows });
             } else {
@@ -22,13 +22,16 @@ module.exports.getUsers = asyncHandler(async (req, res) => {
 
 })
 
-getUserByIdFunction = (res, id) => {
-    dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
+// let userFoundResults;
+// let userFoundResultsError;
+getUserByIdFunction = (id) => {
+    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE user_id = ?",
         [id], function (err, rowsFound, fields) {
-            if (!err) {
-                return res.send({ success: true, data: rowsFound });
+            if (!err) { 
+               return rowsFound;
+                // console.log(userFoundResults)
             } else {
-                return res.send({ success: false, data: err })
+               return err;
             }
         })
 }
@@ -36,7 +39,14 @@ getUserByIdFunction = (res, id) => {
 module.exports.getUserById = asyncHandler(async (req, res) => {
     let user_id = req.params['id'];
     user_id.trim();
-    getUserByIdFunction(res, user_id)
+    dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
+    [user_id], function (err, rowsFound, fields) {
+        if (!err) {
+            return res.send({ success: true, data: rowsFound });
+        } else {
+            return res.send({ success: false, data: err })
+        }
+    })
 })
 // const generateId = () => uuidv4()
 module.exports.createUser = asyncHandler(async (req, res) => {
@@ -190,6 +200,7 @@ module.exports.createUSerSignature = async (req, res) => {
     let inserts = {
         user_signature: req.file.filename
     }
+    // console.log()
     await dbConnection.query("UPDATE dms_users SET ? where user_id  = ?", [inserts, user_id], function (error, results, fields) {
         if (error) {
             // deleteFile()
@@ -197,7 +208,6 @@ module.exports.createUSerSignature = async (req, res) => {
             throw err;
         } else {
             console.log(results);
-            console.log("reached")
             return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
         };
     })
@@ -212,9 +222,10 @@ const updateUsersWithTheSameId = (req, res, index) => {
 
     dbConnection.query("UPDATE dms_users SET ? where user_id = ? ", [readFiles(req, res), index], function (error, results, fields) {
         if (error) {
-            fs.unlink('images' + req.file.filename, () => {
-                return res.status(404).send({ message: "error occurred" })
-            })
+            // fs.unlink('images' + req.file.filename, () => {
+            //     return res.status(404).send({ message: "error occurred" })
+            // })
+            deleteFile(req.file.filename)
             // return res.status(500).send({message: "error occurred"});
             // res.status(401).send({ error: error.sqlMessage })
             throw error;
@@ -225,6 +236,22 @@ const updateUsersWithTheSameId = (req, res, index) => {
     })
 }
 
+const updateNationalUsers = (req,res) => {
+    dbConnection.query("UPDATE dms_users SET ? where user_type = 'NATIONAL' ", [readFiles(req, res)], function (error, results, fields) {
+        if (error) {
+            // fs.unlink('images' + req.file.filename, () => {
+            //     return res.status(404).send({ message: "error occurred" })
+            // })
+            deleteFile(req.file.filename)
+            return res.status(500).send({success: false, message: "error occurred"});
+            // res.status(401).send({ error: error.sqlMessage })
+            throw error;
+        } else {
+            console.log(results);
+            return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
+        };
+    })
+}
 // this is a function of selecting all the users who has the same district id with the user
 
 const checkUsers = (district_id, req, res) => {
@@ -245,7 +272,7 @@ const checkUsers = (district_id, req, res) => {
                 deleteFile(fileOfTheUser)
                 return res.status(200).send({ success: true, data: rowsFound });
             } else {
-                return res.status(400).send({ success: false, data: err })
+                // return res.status(400).send({ success: false, data: err })
             }
         })
 }
@@ -258,22 +285,21 @@ module.exports.createLevelSignature = async (req, res) => {
     }
     let user_id = req.params['user_id'];
     user_id.trim();
-
-    // dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
-    // [user_id], function (err, rowsFound, fields) {
-    //     if (!err) {
-    //         console.log({ success: true, data: rowsFound });
-    //     } else {
-    //         console.log({ success: false, data: err })
-    //     }
-    // })
-
-    await dbConnection.query("SELECT dms_users.first_name, dms_users.user_type ,dms_sectors.sector_id , dms_sectors.district_id ,dms_districts.district_name FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) WHERE user_id = ?",
+    await dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id) WHERE user_id = ?",
         [user_id], function (err, rowsFound, fields) {
             if (!err) {
+                const user_type = rowsFound[0].user_type;
                 user_district_id = rowsFound[0].district_id;
-                console.log("category: ", user_district_id)
-                checkUsers(user_district_id, req, res)
+                console.log("district id: ", user_district_id)
+                if(user_type === "DISTRICT") {
+                    checkUsers(user_district_id, req, res)
+                } else if(user_type === "NATIONAL"){
+                    console.log("user type is national");
+                    updateNationalUsers(req,res)
+                }
+                else {
+                    return res.status(400).send({success: false,message: "bad request"});
+                }
             } else {
                 return err;
             }
