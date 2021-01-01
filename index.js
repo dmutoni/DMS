@@ -12,6 +12,7 @@ const swaggerUi = require('swagger-ui-express');
 const cors = require('cors');
 const multer = require('multer');
 const morgan = require('morgan');
+const path = require('path')
 
 const PORT = process.env.PORT || 5000;
 
@@ -20,12 +21,16 @@ let app = express();
 // configure cors
 
 app.use(morgan('dev'));
-// app.use(cors());
+// app.use(cors());-
 const bodyparser = require('body-parser');
 
 app.use(bodyparser.json());
 
+app.use('/uploads',express.static(path.join(__dirname,'/uploads/levelSignatures')))
+app.use('/uploads',express.static(path.join(__dirname,'/uploads/userSignatures')))
+
 app.use(bodyparser.urlencoded({ extended: true }));
+
 
 const swaggerOptions = {
     swaggerDefinition : {
@@ -88,10 +93,10 @@ app.use('/api/v1/reports', reportsRoute);
 //         return res.status(200).send({message: "successfully done"})
 //     } catch (e) {
 //         console.log(e);
-//         fs.unlink('images'+req.file.filename, () => {
-//             return res.status(404).send({message: "error occurred"})
-//         })
-//         return res.status(500).send({message: "error occurred"});
+        // fs.unlink('images'+req.file.filename, () => {
+        //     return res.status(404).send({message: "error occurred"})
+        // })
+        // return res.status(500).send({message: "error occurred"});
 //     }      
 // })
 app.get("/",(req,res) => {

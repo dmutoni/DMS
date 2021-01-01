@@ -1,6 +1,6 @@
 const app = require('express');
 const { v4: uuidv4 } = require('uuid');
-
+const { deleteFile } = require('../functions/deleteFile')
 const _ = require('lodash')
 const dbConnection = require('../config/db.config');
 const { Validator } = require('node-input-validator');
@@ -21,18 +21,22 @@ module.exports.getUsers = asyncHandler(async (req, res) => {
     }
 
 })
-module.exports.getUserById = asyncHandler(async (req, res) => {
-    let user_id = req.params['id'];
-    user_id.trim();
 
+getUserByIdFunction = (res, id) => {
     dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
-        [user_id], function (err, rowsFound, fields) {
+        [id], function (err, rowsFound, fields) {
             if (!err) {
                 return res.send({ success: true, data: rowsFound });
             } else {
                 return res.send({ success: false, data: err })
             }
         })
+}
+
+module.exports.getUserById = asyncHandler(async (req, res) => {
+    let user_id = req.params['id'];
+    user_id.trim();
+    getUserByIdFunction(res, user_id)
 })
 // const generateId = () => uuidv4()
 module.exports.createUser = asyncHandler(async (req, res) => {
@@ -88,7 +92,9 @@ module.exports.createUser = asyncHandler(async (req, res) => {
     })
 })
 module.exports.updateUser = asyncHandler(async (req, res) => {
-    let user_id = req.params['user_id'];
+    let user_id = req.params['id'];
+    console.log(user_id)
+
     user_id.trim();
     // let ii_id = req.params.iid;
     const validation = new Validator(req.body, {
@@ -157,7 +163,16 @@ module.exports.deleteUser = asyncHandler(async (req, res) => {
     });
 })
 
+const readFiles = (req, res) => {
+    if (_.isEmpty(req.file)) {
+        return res.status(400).send({ success: false, data: "can not insert empty file" })
+    };
 
+    let inserts = {
+        level_stamp: req.file.filename
+    }
+    return inserts;
+}
 
 module.exports.createUSerSignature = async (req, res) => {
     console.log("something")
@@ -175,54 +190,92 @@ module.exports.createUSerSignature = async (req, res) => {
     let inserts = {
         user_signature: req.file.filename
     }
-    let printQuery = await dbConnection.query("UPDATE dms_users SET ? where user_id  = ?", [inserts, user_id], function (error, results, fields) {
+    await dbConnection.query("UPDATE dms_users SET ? where user_id  = ?", [inserts, user_id], function (error, results, fields) {
         if (error) {
-
+            // deleteFile()
             res.status(401).send({ error: error.sqlMessage })
             throw err;
         } else {
             console.log(results);
-            console.log("reached") // results.send("row inserted");
+            console.log("reached")
             return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
-            // console.log("Row inserted: "+ results.affectedRows);
         };
     })
 }
 
-module.exports.createLevelSignature = async(req,res) => {
-    let user_category;
+let userWithSameCategory = [];
+
+
+// this is a function for updating all the users who has the same district id as the user who has been selected 
+
+const updateUsersWithTheSameId = (req, res, index) => {
+
+    dbConnection.query("UPDATE dms_users SET ? where user_id = ? ", [readFiles(req, res), index], function (error, results, fields) {
+        if (error) {
+            fs.unlink('images' + req.file.filename, () => {
+                return res.status(404).send({ message: "error occurred" })
+            })
+            // return res.status(500).send({message: "error occurred"});
+            // res.status(401).send({ error: error.sqlMessage })
+            throw error;
+        } else {
+            console.log(results);
+            // return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
+        };
+    })
+}
+
+// this is a function of selecting all the users who has the same district id with the user
+
+const checkUsers = (district_id, req, res) => {
+    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) WHERE dms_sectors.district_id = ? AND dms_users.user_type = 'DISTRICT'",
+        [district_id], function (err, rowsFound, fields) {
+            if (!err) {
+                userWithSameCategory = rowsFound
+                console.log("reached")
+                let fileOfTheUser
+                for (let index = 0; index < userWithSameCategory.length; index++) {
+                    const element = userWithSameCategory[index].user_id;
+                    if(userWithSameCategory[index].level_stamp){
+                         fileOfTheUser = userWithSameCategory[index].level_stamp;
+                    }
+                    updateUsersWithTheSameId(req, res, element)
+                }
+                console.log(`file of the user ${fileOfTheUser}`)
+                deleteFile(fileOfTheUser)
+                return res.status(200).send({ success: true, data: rowsFound });
+            } else {
+                return res.status(400).send({ success: false, data: err })
+            }
+        })
+}
+
+// this is a function for selecting district id for the user who has logged in 
+
+module.exports.createLevelSignature = async (req, res) => {
     if (!req.params) {
         return res.status(400).send({ success: false, data: "no provided id" })
     }
     let user_id = req.params['user_id'];
     user_id.trim();
 
-    dbConnection.query("SELECT user_type FROM dms_users WHERE user_id = ?",
-    [user_id], function (err, rowsFound, fields) {
-        if (!err) {
-            user_category = rowsFound;
-            console.log(user_category)
-            return res.send({ success: true, data: user_category });
-        } else {
-            return res.send({ success: false, data: err })
-        }
-    })
-
-    // if (_.isEmpty(req.file)) {
-    //     return res.status(400).send({ success: false, data: "can not insert empty file" })
-    // };
-
-    // let inserts = {
-    //     user_signature: req.file.filename
-    // }
-    // let printQuery = await dbConnection.query("UPDATE dms_users SET ? where user_id  = ?", [inserts, user_id], function (error, results, fields) {
-    //     if (error) {
-
-    //         res.status(401).send({ error: error.sqlMessage })
-    //         throw err;
+    // dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
+    // [user_id], function (err, rowsFound, fields) {
+    //     if (!err) {
+    //         console.log({ success: true, data: rowsFound });
     //     } else {
-    //         console.log(results);
-    //         return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
-    //     };
+    //         console.log({ success: false, data: err })
+    //     }
     // })
+
+    await dbConnection.query("SELECT dms_users.first_name, dms_users.user_type ,dms_sectors.sector_id , dms_sectors.district_id ,dms_districts.district_name FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) WHERE user_id = ?",
+        [user_id], function (err, rowsFound, fields) {
+            if (!err) {
+                user_district_id = rowsFound[0].district_id;
+                console.log("category: ", user_district_id)
+                checkUsers(user_district_id, req, res)
+            } else {
+                return err;
+            }
+        })
 }
