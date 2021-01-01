@@ -39,6 +39,8 @@ const router = express.Router({ mergeParams: true })
  *          enum: ['ACTIVE', 'PENDING', 'DECLINED', 'CLOSED']
  *       done_on:
  *          type: string
+ *       state:
+ *          type: string
  */ 
 
 /**
@@ -233,3 +235,10 @@ router.route('/pushReportToNationalLevel/:id').put(pushReportToNationalLevel)
 
 
 module.exports = router
+
+
+
+
+
+
+

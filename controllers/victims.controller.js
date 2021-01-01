@@ -84,6 +84,7 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
                 req.body.isibo,
                 req.body.village_id
             ]
+            victim_pin = 
             console.log("reaching");
             let sql = "INSERT INTO dms_victims(victim_id,victim_pin, first_name, last_name, gender, age, marital_status,family_members, primary_phone_number, secondary_phone_number, national_id, is_employed, ikiciro_ubudehe, isibo, village_id) VALUES (?);";
           await  dbConnection.query(sql, [inserts], (err, results, fields) => {
