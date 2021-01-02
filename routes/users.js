@@ -200,8 +200,94 @@ router.route('/deleteUser/:id').put(protect,authorize('SECTOR','DISTRICT','NATIO
 
 router.route('/addUserSignature/:user_id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),[CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 
+/**
+ * @swagger
+ * /api/v1/users/addUserSignature/{user_id}:
+ *   post:
+ *    tags:
+ *      - users
+ *    description: Create a new user signature
+ *    consumes:
+ *      - multipart/form-data
+ *    parameters:
+ *      - name: user_id
+ *        in: path
+ *        required: true
+ *      - name: files
+ *        in: formData
+ *        type: file
+ *        description: The signature to upload
+ *    responses:
+ *      201:
+ *        description: created
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
+
 router.route('/addLevelsStamp/:user_id').put(protect,authorize('DISTRICT','NATIONAL'),[CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
 
+/**
+ * @swagger
+ * /api/v1/users/addLevelsStamp/{user_id}:
+ *   post:
+ *    tags:
+ *      - users
+ *    description: Create a new level stamp
+ *    consumes:
+ *      - multipart/form-data
+ *    parameters:
+ *      - name: user_id
+ *        in: path
+ *        required: true
+ *      - name: files
+ *        in: formData
+ *        type: file
+ *        description: The stamp to upload
+ *    responses:
+ *      201:
+ *        description: created
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 router.route('/login/:id').post(login);
+
+/**
+ * @swagger
+ * /api/v1/users/login/{id}:
+ *   post:
+ *    tags:
+ *      - users
+ *    description: post a user
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: id
+ *        in: path
+ *        required: true
+ *      - name: body
+ *        description: Fields for a user
+ *        in: body
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/users'
+ *    responses:
+ *      201:
+ *        description: logged in
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 
 module.exports = router

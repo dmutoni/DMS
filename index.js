@@ -34,21 +34,52 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 const swaggerOptions = {
     swaggerDefinition : {
+        // openapi: '3.0.1',
         info: {
             title: "DMS API",
-            description:  "https://disaster-management-squadrons.herokuapp.com",
+            description:  "Disaster management system to help Rwanda manage its disasters",
             version: '1.0.0',
             contact: {
                 email: "mdenyse15@gmail.com" ,
                 name : "e-squadrons"
             },
-            servers: ["https://disaster-management-squadrons.herokuapp.com"],
-        }
+        },
+            servers: [
+            {
+                url: "https://disaster-management-squadrons.herokuapp.com",
+                description: "Production server"
+              },
+              {
+                url: "http://localhost:5000",
+                description: "Development server"
+              }
+            ],
+            security: [
+                {
+                  bearerAuth: [],
+                },
+              ],
+              components: {
+                securitySchemes: {
+                  bearerAuth: {
+                    type: 'http',
+                    scheme: 'bearer',
+                    bearerFormat: 'bearerFormat',
+                  },
+                },
+                responses: {
+                  UnauthorizedError: {
+                    description: 'Access token is missing or invalid',
+                  },
+                },
+            },  
     },
     apis: ["routes/*.js"]
-};
+}
+
+
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs',swaggerUi.serve, swaggerUi.setup(swaggerDocs,{explorer: true}));
 
 
 // app.get("/customers",(req,res) => {
