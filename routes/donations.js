@@ -4,11 +4,13 @@ const {
     createDonation, 
     updateDonation,
     deleteDonation,
-    getDonationById, 
-    getDonation } = require('../controllers/donations.contoller')
+    getDonationById } = require('../controllers/donations.controller')
     // const { route } = require('./DonationTypes')
 
 const router = express.Router({ mergeParams: true })
+
+const { protect,authorize } = require('../middleware/auth')
+
 
 /**
  * @swagger
@@ -50,7 +52,7 @@ const router = express.Router({ mergeParams: true })
  *         description: Internal Server error
  */
 
-router.route('/').get(getDonations)
+router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getDonations)
 /**
  * @swagger
  * /api/v1/donations:
@@ -79,7 +81,7 @@ router.route('/').get(getDonations)
  *      500:
  *        description: Internal Server error
  */
-router.route('/').post(createDonation)
+router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createDonation)
 /**
  * @swagger
  * /api/v1/donations/{donation_id}:
@@ -111,7 +113,7 @@ router.route('/').post(createDonation)
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').put(updateDonation)
+router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updateDonation)
 /**
  * @swagger
  * /api/v1/donations/{donation_id}:
@@ -139,9 +141,9 @@ router.route('/:id').put(updateDonation)
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').delete(deleteDonation)
+router.route('/:id').delete(protect,authorize('SECTOR','DISTRICT','NATIONAL'),deleteDonation)
 
-router.route('/getDonationsById/:id').get(getDonationById)
+router.route('/getDonationsById/:id').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getDonationById)
 
 /**
  * @swagger

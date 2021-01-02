@@ -32,15 +32,6 @@ module.exports.get_h_zoneById = asyncHandler(async(req,res) => {
     })
 })
 
-// function checkLevelId(level_id, callBack) {
-//     dbConnection.query("SELECT * FROM dms_levels WHERE level_id = ?", [level_id], function(err, rows, fields) {
-//         if (rows.length > 0)
-//             callBack(true)
-//         else
-//             callBack(false)
-
-//     })
-// }
 function checkUserId(user_id, callBack) {
     dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?", [user_id], function(err, rows, fields) {
         if (rows.length > 0)
@@ -86,7 +77,7 @@ try{
             if(err) {
                return res.status(401).send({error: err.sqlMessage })
             } else {
-                return res.status(201).send({error: false, data: results, message: "New record has been inserted", message2: user_response, message3: user_response});
+                return res.status(201).send({error: false, data: results, message: "New record has been inserted", message2: user_response, message3: user_response2});
             }
         })
     }

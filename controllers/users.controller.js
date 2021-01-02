@@ -5,6 +5,9 @@ const _ = require('lodash')
 const dbConnection = require('../config/db.config');
 const { Validator } = require('node-input-validator');
 const asyncHandler = require('../middleware/async');
+const {hashPassword} = require('../utils/passwords/hash')
+const bcrypt = require('bcryptjs')
+const {generateAuthToken} = require('../utils/tokens/generateToken')
 // let  payloadChecker = require('payload-validator');
 
 module.exports.getUsers = asyncHandler(async (req, res) => {
@@ -39,7 +42,7 @@ getUserByIdFunction = (id) => {
 module.exports.getUserById = asyncHandler(async (req, res) => {
     let user_id = req.params['id'];
     user_id.trim();
-    dbConnection.query("SELECT * FROM dms_users WHERE user_id = ?",
+    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE user_id = ?",
     [user_id], function (err, rowsFound, fields) {
         if (!err) {
             return res.send({ success: true, data: rowsFound });
@@ -69,7 +72,8 @@ module.exports.createUser = asyncHandler(async (req, res) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
-            // const password = hashPassword(req.body.password);
+            const hashedPassword = await hashPassword(req.body.password);
+            console.log("password ",hashedPassword)
             let inserts = [
                 uuidv4(),
                 req.body.first_name,
@@ -78,7 +82,7 @@ module.exports.createUser = asyncHandler(async (req, res) => {
                 req.body.email,
                 req.body.phone_number,
                 req.body.national_id,
-                req.body.password,
+                hashedPassword,
                 req.body.job_title,
                 req.body.sector_id,
                 req.body.user_type,
@@ -215,7 +219,22 @@ module.exports.createUSerSignature = async (req, res) => {
 
 let userWithSameCategory = [];
 
-
+const updateNationalUsers = (req,res) => {
+    dbConnection.query("UPDATE dms_users SET ? where user_type = 'NATIONAL' ", [readFiles(req, res)], function (error, results, fields) {
+        if (error) {
+            // fs.unlink('images' + req.file.filename, () => {
+            //     return res.status(404).send({ message: "error occurred" })
+            // })
+            deleteFile(req.file.filename)
+            return res.status(500).send({success: false, message: "error occurred"});
+            // res.status(401).send({ error: error.sqlMessage })
+            throw error;
+        } else {
+            console.log(results);
+            return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
+        };
+    })
+}
 // this is a function for updating all the users who has the same district id as the user who has been selected 
 
 const updateUsersWithTheSameId = (req, res, index) => {
@@ -236,22 +255,7 @@ const updateUsersWithTheSameId = (req, res, index) => {
     })
 }
 
-const updateNationalUsers = (req,res) => {
-    dbConnection.query("UPDATE dms_users SET ? where user_type = 'NATIONAL' ", [readFiles(req, res)], function (error, results, fields) {
-        if (error) {
-            // fs.unlink('images' + req.file.filename, () => {
-            //     return res.status(404).send({ message: "error occurred" })
-            // })
-            deleteFile(req.file.filename)
-            return res.status(500).send({success: false, message: "error occurred"});
-            // res.status(401).send({ error: error.sqlMessage })
-            throw error;
-        } else {
-            console.log(results);
-            return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
-        };
-    })
-}
+
 // this is a function of selecting all the users who has the same district id with the user
 
 const checkUsers = (district_id, req, res) => {
@@ -305,3 +309,21 @@ module.exports.createLevelSignature = async (req, res) => {
             }
         })
 }
+exports.login = async(req,res) => {
+    let user_id = req.params['id'];
+    user_id.trim();
+
+    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE user_id = ?",
+    [user_id],  async(err, rowsFound, fields) => {
+        if (!err) {
+            if(!rowsFound.length > 0) return res.status(400).send({ success: false, data: "nothing found" });
+            const userId = rowsFound[0].user_id;
+            const matchedPassword = await bcrypt.compare(req.body.password,rowsFound[0].password);
+            if(!matchedPassword)  return res.status(400).send({success: false, data: "invalid email or password"})
+
+            return res.status(200).send({success: true,data: rowsFound, token: generateAuthToken(userId)})
+        } else {
+            return res.send({ success: false, data: err })
+        }
+    })
+} 

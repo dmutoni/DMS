@@ -12,6 +12,9 @@ const {
     pushReportToNationalLevel} = require('../controllers/reports.controller')
     // const { route } = require('./ReportTypes')
 
+const { protect,authorize } = require('../middleware/auth')
+
+
 const router = express.Router({ mergeParams: true })
 /**
  * @swagger
@@ -59,7 +62,7 @@ const router = express.Router({ mergeParams: true })
  *         description: Internal Server error
  */
 
-router.route('/').get(getReports)
+router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getReports)
 /**
  * @swagger
  * /api/v1/reports:
@@ -89,7 +92,7 @@ router.route('/').get(getReports)
  *        description: Internal Server error
  */
 
-router.route('/').post(createReport)
+router.route('/').post(protect,authorize('SECTOR'),createReport)
 /**
  * @swagger
  * /api/v1/reports/{report_id}:
@@ -121,7 +124,7 @@ router.route('/').post(createReport)
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').put(updateReport)
+router.route('/:id').put(protect,authorize('SECTOR'),updateReport)
 /**
  * @swagger
  * /api/v1/reports/{report_id}:
@@ -149,9 +152,9 @@ router.route('/:id').put(updateReport)
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').delete(deleteReport)
+router.route('/:id').delete(protect,authorize('SECTOR'),deleteReport)
 
-router.route('/getReportsById/:id').get(getReportsById)
+router.route('/getReportsById/:id').get(protect,authorize('SECTOR'),getReportsById)
 /**
  * @swagger
  * /api/v1/reports/getReportsBySector/{report_id}:
@@ -180,11 +183,11 @@ router.route('/getReportsById/:id').get(getReportsById)
  *        description: Internal Server error
  */
 
-router.route('/getReportsBySector/:id').get(getReportsBySector)
+router.route('/getReportsBySector/:id').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getReportsBySector)
 
-router.route('/pushReportToDistrictLevel/:id').put(pushReportToDistrict)
+router.route('/pushReportToDistrictLevel/:id').put(protect,authorize('SECTOR'),pushReportToDistrict)
 
-router.route('/pushReportToNationalLevel/:id').put(pushReportToNationalLevel)
+router.route('/pushReportToNationalLevel/:id').put(protect,authorize('DISTRICT'),pushReportToNationalLevel)
 
 /**
  * @swagger
@@ -214,7 +217,7 @@ router.route('/pushReportToNationalLevel/:id').put(pushReportToNationalLevel)
  *        description: Internal Server error
  */
 
- router.route('/getReportsNamesVictimsJoined').get(returnVictimReportJoined);
+ router.route('/getReportsNamesVictimsJoined').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),returnVictimReportJoined);
 
  
 /**

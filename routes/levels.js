@@ -7,8 +7,7 @@ const {
     getLevelsById
  } = require('../controllers/levels.controller')
     // const { route } = require('./LevelTypes')
-
-    const router = express.Router({ mergeParams: true })
+const router = express.Router({ mergeParams: true })
 
 
 /**

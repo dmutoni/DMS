@@ -6,16 +6,15 @@ const levelsRoute = require('./routes/levels');
 const highRiskZonesRoute = require('./routes/high-risk-zone');
 const donationsRoute = require('./routes/donations');
 const reportsRoute = require('./routes/reports');
-const dbConnection = require('./config/db.config');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const cors = require('cors');
-const multer = require('multer');
 const morgan = require('morgan');
 const path = require('path')
+const dotenv = require('dotenv')
 
 const PORT = process.env.PORT || 5000;
 
+const { protect,authorize } = require('./middleware/auth')
 
 let app = express();
 // configure cors
@@ -23,6 +22,7 @@ let app = express();
 app.use(morgan('dev'));
 // app.use(cors());-
 const bodyparser = require('body-parser');
+dotenv.config({ path: './config/config.env'});
 
 app.use(bodyparser.json());
 
@@ -73,7 +73,7 @@ app.use("/api/v1/levels", levelsRoute);
 app.use("/api/v1/locations", locationsRoute);
 app.use('/api/v1/h_zones', highRiskZonesRoute);
 app.use('/api/v1/donations', donationsRoute);
-app.use('/api/v1/reports', reportsRoute);
+app.use('/api/v1/reports',protect,authorize('SECTOR','DISTRICT','NATIONAL'), reportsRoute);
 
 // let storage  = multer.diskStorage({
 //     destination: (req,file,cb) => {

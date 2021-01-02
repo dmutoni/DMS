@@ -6,9 +6,11 @@ const {
     deleteUser,
     getUserById,
     createUSerSignature,
-    createLevelSignature } = require('../controllers/users.controller')
+    createLevelSignature, 
+    login} = require('../controllers/users.controller')
 const { upload } = require('../functions/insertFile')
 const {CREATE_DIR} = require('../middleware/createUploadDirectory')
+const { protect,authorize } = require('../middleware/auth')
 // const { route } = require('./UserTypes')
 /**
 * @swagger
@@ -71,7 +73,7 @@ const router = express.Router({ mergeParams: true })
  *       500:
  *         description: Internal Server error
  */
-router.route('/').get(getUsers)
+router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUsers)
 /**
  * @swagger
  * /api/v1/users:
@@ -102,7 +104,7 @@ router.route('/').get(getUsers)
  */
 
 
-router.route('/getUserId/:id').get(getUserById)
+router.route('/getUserId/:id').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUserById)
 
 /**
  * @swagger
@@ -132,7 +134,7 @@ router.route('/getUserId/:id').get(getUserById)
  *        description: Internal Server error
  */
 
-router.route('/').post(createUser)
+router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createUser)
 /**
  * @swagger
  * /api/v1/users/{user_id}:
@@ -165,7 +167,7 @@ router.route('/').post(createUser)
  *        description: Internal Server error
  */
 
-router.route('/:id').put(updateUser)
+router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updateUser)
 
 /**
  * @swagger
@@ -194,9 +196,12 @@ router.route('/:id').put(updateUser)
  *      500:
  *        description: Internal Server error
  */
-router.route('/deleteUser/:id').put(deleteUser)
+router.route('/deleteUser/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),deleteUser)
 
-router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
+router.route('/addUserSignature/:user_id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),[CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 
-router.route('/addLevelsStamp/:user_id').put([CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
+router.route('/addLevelsStamp/:user_id').put(protect,authorize('DISTRICT','NATIONAL'),[CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
+
+router.route('/login/:id').post(login);
+
 module.exports = router

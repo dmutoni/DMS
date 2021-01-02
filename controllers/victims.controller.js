@@ -45,7 +45,7 @@ module.exports.getVictimById = asyncHandler(async(req,res) => {
 module.exports.createVictim = asyncHandler(async(req, res) => {
 
     const validation = new Validator(req.body, {
-        victim_pin: 'required',
+        // victim_pin: 'required',
         first_name: 'required',
         last_name: 'required',
         gender: 'required',
@@ -69,7 +69,7 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
 
             let inserts = [
                 uuidv4(),
-                req.body.victim_pin,
+                // req.body.victim_pin,
                 req.body.first_name,
                 req.body.last_name,
                 req.body.gender,
