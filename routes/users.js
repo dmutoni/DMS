@@ -73,7 +73,7 @@ const router = express.Router({ mergeParams: true })
  *       500:
  *         description: Internal Server error
  */
-router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUsers)
+router.route('/').get(getUsers)
 /**
  * @swagger
  * /api/v1/users:
@@ -104,7 +104,7 @@ router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUsers
  */
 
 
-router.route('/getUserId/:id').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUserById)
+router.route('/getUserId/:id').get(getUserById)
 
 /**
  * @swagger
@@ -134,7 +134,7 @@ router.route('/getUserId/:id').get(protect,authorize('SECTOR','DISTRICT','NATION
  *        description: Internal Server error
  */
 
-router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createUser)
+router.route('/').post(createUser)
 /**
  * @swagger
  * /api/v1/users/{user_id}:
@@ -167,7 +167,7 @@ router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createU
  *        description: Internal Server error
  */
 
-router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updateUser)
+router.route('/:id').put(updateUser)
 
 /**
  * @swagger
