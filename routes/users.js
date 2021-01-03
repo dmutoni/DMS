@@ -196,9 +196,9 @@ router.route('/:id').put(updateUser)
  *      500:
  *        description: Internal Server error
  */
-router.route('/deleteUser/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),deleteUser)
+router.route('/deleteUser/:id').put(deleteUser)
 
-router.route('/addUserSignature/:user_id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),[CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
+router.route('/addUserSignature/:user_id').put(createUSerSignature])
 
 /**
  * @swagger
@@ -227,7 +227,7 @@ router.route('/addUserSignature/:user_id').put(protect,authorize('SECTOR','DISTR
  */
 
 
-router.route('/addLevelsStamp/:user_id').put(protect,authorize('DISTRICT','NATIONAL'),[CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
+router.route('/addLevelsStamp/:user_id').put(createLevelSignature])
 
 /**
  * @swagger
