@@ -104,7 +104,7 @@ app.use("/api/v1/levels", levelsRoute);
 app.use("/api/v1/locations", locationsRoute);
 app.use('/api/v1/h_zones', highRiskZonesRoute);
 app.use('/api/v1/donations', donationsRoute);
-app.use('/api/v1/reports',protect,authorize('SECTOR','DISTRICT','NATIONAL'), reportsRoute);
+app.use('/api/v1/reports', reportsRoute);
 
 // let storage  = multer.diskStorage({
 //     destination: (req,file,cb) => {
