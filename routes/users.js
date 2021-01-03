@@ -198,7 +198,7 @@ router.route('/:id').put(updateUser)
  */
 router.route('/deleteUser/:id').put(deleteUser)
 
-router.route('/addUserSignature/:user_id').put(createUSerSignature])
+router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 
 /**
  * @swagger
@@ -227,7 +227,7 @@ router.route('/addUserSignature/:user_id').put(createUSerSignature])
  */
 
 
-router.route('/addLevelsStamp/:user_id').put(createLevelSignature])
+router.route('/addLevelsStamp/:user_id').put([CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
 
 /**
  * @swagger
