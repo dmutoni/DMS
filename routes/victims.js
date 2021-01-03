@@ -80,7 +80,7 @@ const router = express.Router({ mergeParams: true })
  *         description: Internal Server error
  */
 
-router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getVictims)
+router.route('/').get(getVictims)
 /**
  * @swagger
  * /api/v1/victims:
@@ -109,7 +109,7 @@ router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getVicti
  *      500:
  *        description: Internal Server error
  */
-router.route('/').post(protect,authorize('SECTOR'),createVictim)
+router.route('/').post(createVictim)
 /**
  * @swagger
  * /api/v1/victims/{victim_id}:
@@ -142,7 +142,7 @@ router.route('/').post(protect,authorize('SECTOR'),createVictim)
  *        description: Internal Server error
  */
 
-router.route('/:id').put(protect,authorize('SECTOR'),updateVictim)
+router.route('/:id').put(updateVictim)
 /**
  * @swagger
  * /api/v1/victims/{victim_id}:
@@ -171,10 +171,10 @@ router.route('/:id').put(protect,authorize('SECTOR'),updateVictim)
  *        description: Internal Server error
  */
 
-router.route('/:id').delete(protect,authorize('SECTOR'),deleteVictim)
+router.route('/:id').delete(deleteVictim)
 
 
-router.route('/getVictimById:id').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getVictimById)
+router.route('/getVictimById:id').get(getVictimById)
 /**
  * @swagger
  * /api/v1/reports/getVictimById/{victim_id}:
