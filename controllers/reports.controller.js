@@ -8,7 +8,7 @@ const asyncHandler = require('../middleware/async');
 
 
 module.exports.getReports = asyncHandler(async (req, res) => {
-    dbConnection.query("SELECT dms_reports.report_title, dms_victims.first_name, dms_victims.last_name , dms_provinces.province_name,dms_districts.district_name FROM dms_reports JOIN dms_victims ON (dms_reports.victim_id = dms_victims.victim_id) JOIN dms_villages ON (dms_villages.village_id = dms_victims.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) JOIN dms_provinces ON (dms_provinces.province_id = dms_districts.province_id)", (err, rows, fields) => {
+    dbConnection.query("SELECT * FROM dms_reports JOIN dms_victims ON (dms_reports.victim_id = dms_victims.victim_id) JOIN dms_villages ON (dms_villages.village_id = dms_victims.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) JOIN dms_provinces ON (dms_provinces.province_id = dms_districts.province_id)", (err, rows, fields) => {
         if (!err) {
             res.send({status: true, data: rows});
         } else {
