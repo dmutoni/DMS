@@ -14,7 +14,7 @@ const { protect,authorize } = require('../middleware/auth')
 // const { route } = require('./UserTypes')
 /**
 * @swagger
-* definitions:
+* components:
 *   users:
 *     required:          
 *       - first_name
@@ -57,6 +57,20 @@ const { protect,authorize } = require('../middleware/auth')
 *          type: string 
 *          enum: ['ACTIVE', 'INACTIVE']
 */
+
+/**
+* @swagger
+* components:
+*   schemas:
+*     login:
+*       properties:
+*         email:
+*           type: string
+*         password:
+*           type: string
+*/
+
+
 const router = express.Router({ mergeParams: true })
 /**
  * @swagger
@@ -93,7 +107,7 @@ router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUsers
  *        in: body
  *        required: true
  *        schema:
- *          $ref: '#/definitions/users'
+ *          $ref: '#/components/users'
  *    responses:
  *      201:
  *        description: created
@@ -124,7 +138,7 @@ router.route('/getUserId/:id').get(protect,authorize('SECTOR','DISTRICT','NATION
  *        in: path
  *        required: true
  *        schema:
- *          $ref: '#/definitions/users'
+ *          $ref: '#/components/users'
  *    responses:
  *      201:
  *        description: deleted
@@ -134,7 +148,7 @@ router.route('/getUserId/:id').get(protect,authorize('SECTOR','DISTRICT','NATION
  *        description: Internal Server error
  */
 
-router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createUser)
+router.route('/').post(createUser)
 /**
  * @swagger
  * /api/v1/users/{user_id}:
@@ -157,7 +171,7 @@ router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createU
  *        in: body
  *        required: true
  *        schema:
- *          $ref: '#/definitions/users'
+ *          $ref: '#/components/users'
  *    responses:
  *      201:
  *        description: updated
@@ -187,7 +201,7 @@ router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updat
  *        in: path
  *        required: true
  *        schema:
- *          $ref: '#/definitions/users'
+ *          $ref: '#/components/users'
  *    responses:
  *      201:
  *        description: deleted
@@ -255,39 +269,34 @@ router.route('/addLevelsStamp/:user_id').put(protect,authorize('DISTRICT','NATIO
  *        description: Internal Server error
  */
 
-router.route('/login/:id').post(login);
-
+router.route('/login').post(login);
 /**
  * @swagger
- * /api/v1/users/login/{id}:
+ * /api/v1/users/login:
  *   post:
  *    tags:
- *      - users
- *    description: post a user
+ *      - login
+ *    description: Login into the account
  *    consumes:
  *      - "application/json"
- *      - "application/xml"
  *    produces:
- *      - "application/xml"
  *      - "application/json"
- *    parameters:
- *      - name: id
- *        in: path
- *        required: true
- *      - name: body
- *        description: Fields for a user
- *        in: body
- *        required: true
- *        schema:
- *          $ref: '#/definitions/users'
+ *    requestBody:
+ *      description: Log in credentials
+ *      required: true
+ *      content:
+ *        application/json:
+ *         schema:
+ *          $ref: '#/components/schemas/login'
  *    responses:
  *      201:
- *        description: logged in
+ *        description: created
+ *      400:
+ *        description: bad request
  *      404:
  *        description: Not found
  *      500:
  *        description: Internal Server error
  */
-
 
 module.exports = router

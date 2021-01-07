@@ -16,7 +16,7 @@ const { Validator } = require('node-input-validator');
  *         type: string
  *       province_name:
  *         type: string
- */ 
+ */
 
 /**
  * @swagger
@@ -30,36 +30,36 @@ const { Validator } = require('node-input-validator');
  *         type: string
  *       district_name:
  *         type: string
- */ 
+ */
 
- /**
- * @swagger
- * definitions:
- *   sectors:
- *     required:          
- *       - sector_id
- *       - sector_name
- *     properties:
- *       sector_id:
- *         type: string
- *       sector_name:
- *         type: string
- */ 
+/**
+* @swagger
+* definitions:
+*   sectors:
+*     required:          
+*       - sector_id
+*       - sector_name
+*     properties:
+*       sector_id:
+*         type: string
+*       sector_name:
+*         type: string
+*/
 
- 
- /**
- * @swagger
- * definitions:
- *   villages:
- *     required:          
- *       - village_id
- *       - village_name
- *     properties:
- *       village_id:
- *         type: string
- *       village_name:
- *         type: string
- */ 
+
+/**
+* @swagger
+* definitions:
+*   villages:
+*     required:          
+*       - village_id
+*       - village_name
+*     properties:
+*       village_id:
+*         type: string
+*       village_name:
+*         type: string
+*/
 
 /**
  * @swagger
@@ -73,67 +73,67 @@ const { Validator } = require('node-input-validator');
  *         type: string
  *       cell_name:
  *         type: string
- */ 
+ */
 
-Router.get('/getProvinces/',(req,res)=>{
-    dbConnection.query("SELECT * FROM dms_provinces",(err,rows,fields)=>{
-        if(!err){
-            
-            
-            if(rows.length === 0){
+Router.get('/getProvinces/', (req, res) => {
+    dbConnection.query("SELECT * FROM dms_provinces", (err, rows, fields) => {
+        if (!err) {
 
-                return res.status(404).send({success: false, message: 'No records found in the found'})
+
+            if (rows.length === 0) {
+
+                return res.status(404).send({ success: false, message: 'No records found in the found' })
             }
-            else{
-                 return res.status(200).send({success:true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
         }
-        else{
+        else {
             throw err;
         }
     })
 })
- /**
- * @swagger
- * /api/v1/locations/getProvinces/:
- *   get:
- *     tags:
- *       - locations
- *     description: Get all locations
- *     responses:
- *       200:
- *         description: OK
- *       404:
- *         description: Not found
- *       500:
- *         description: Internal Server error
- */
-Router.get('/getProvincesById/:province_id',(req,res)=>{
+/**
+* @swagger
+* /api/v1/locations/getProvinces/:
+*   get:
+*     tags:
+*       - locations
+*     description: Get all locations
+*     responses:
+*       200:
+*         description: OK
+*       404:
+*         description: Not found
+*       500:
+*         description: Internal Server error
+*/
+Router.get('/getProvincesById/:province_id', (req, res) => {
     const validation = new Validator(req.body, {
         province_id: 'required'
     });
 
-    if(!validation){
+    if (!validation) {
         return res.status(422).send(validation.errors);
     }
     let province_id = req.params.province_id;
-    if(!province_id){
-        return res.status(400).send({success: false, message: "bad request"});
+    if (!province_id) {
+        return res.status(400).send({ success: false, message: "bad request" });
     }
-    dbConnection.query("SELECT * FROM dms_provinces WHERE province_id = ?",[province_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_provinces WHERE province_id = ?", [province_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
         }
-        else if(!error) {
-             console.log(rows.length);
+        else if (!error) {
+            console.log(rows.length);
 
-            if(rows.length === 0){
+            if (rows.length === 0) {
 
-                return res.status(404).send({success: false,message: 'province not found'})
+                return res.status(404).send({ success: false, message: 'province not found' })
             }
-            else{
-                 return res.status(200).send({success: true, data: rows[0] })
+            else {
+                return res.status(200).send({ success: true, data: rows[0] })
             }
 
             // return res.status
@@ -141,43 +141,43 @@ Router.get('/getProvincesById/:province_id',(req,res)=>{
 
     })
 })
- /**
- * @swagger
- * /api/v1/locations/getProvincesById/{province_id}:
- *   get:
- *     tags:
- *       - locations
- *     description: Get a province by id
- *     parameters:
- *      - name: "province_id"
- *        in: path
- *        required: true
- *     responses:
- *       200:
- *         description: OK
- *       404:
- *         description: Not found
- *       500:
- *         description: Internal Server error
- */
+/**
+* @swagger
+* /api/v1/locations/getProvincesById/{province_id}:
+*   get:
+*     tags:
+*       - locations
+*     description: Get a province by id
+*     parameters:
+*      - name: "province_id"
+*        in: path
+*        required: true
+*     responses:
+*       200:
+*         description: OK
+*       404:
+*         description: Not found
+*       500:
+*         description: Internal Server error
+*/
 // Router.post('/uploadHighRiskZonesImages'/(req,res) =>{
 
 // })
-Router.get('/getDistricts/',(req,res)=>{
-    dbConnection.query("SELECT * FROM dms_districts",(err,rows,fields)=>{
-        if(!err){
+Router.get('/getDistricts/', (req, res) => {
+    dbConnection.query("SELECT * FROM dms_districts", (err, rows, fields) => {
+        if (!err) {
             // res.send(rows);
-            
-            if(rows.length === 0){
 
-                return res.status(404).send({success: false, message: 'No records found in the found'})
+            if (rows.length === 0) {
+
+                return res.status(404).send({ success: false, message: 'No records found in the found' })
             }
-            else{
-                 return res.status(200).send({success: true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
         }
-        else{
+        else {
             throw err;
         }
     })
@@ -197,22 +197,22 @@ Router.get('/getDistricts/',(req,res)=>{
  *       500:
  *         description: Internal Server error
  */
-Router.get('/getDistrictById/:district_id',(req,res)=>{
+Router.get('/getDistrictById/:district_id', (req, res) => {
     let district_id = req.params.district_id;
-    dbConnection.query("SELECT * FROM dms_districts WHERE district_id = ?",[district_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_districts WHERE district_id = ?", [district_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
         }
-        else if(!error) {
-             console.log(rows.length);
-             console.log(district_id);
-            if(rows.length === 0){
+        else if (!error) {
+            console.log(rows.length);
+            console.log(district_id);
+            if (rows.length === 0) {
 
-                return res.status(404).send({success: false,message: 'district not found'})
-                
+                return res.status(404).send({ success: false, message: 'district not found' })
+
             }
-            else{
-                 return res.status(200).send({success:true, data: rows[0] })
+            else {
+                return res.status(200).send({ success: true, data: rows[0] })
             }
 
             // return res.status
@@ -220,41 +220,42 @@ Router.get('/getDistrictById/:district_id',(req,res)=>{
 
     })
 })
- /**
- * @swagger
- * /api/v1/locations/getDistrictById/{district_id}:
- *   get:
- *     tags:
- *       - locations
- *     description: Get a district by id
- *     parameters:
- *      - name: "district_id"
- *        in: path
- *        required: true
- *     responses:
- *       200:
- *         description: OK
- *       404:
- *         description: Not found
- *       500:
- *         description: Internal Server error
- */
-Router.get('/getDistrictsByProvince/:province_id',(req,res)=>{
+/**
+* @swagger
+* /api/v1/locations/getDistrictById/{district_id}:
+*   get:
+*     tags:
+*       - locations
+*     description: Get a district by id
+*     parameters:
+*      - name: "district_id"
+*        in: path
+*        required: true
+*     responses:
+*       200:
+*         description: OK
+*       404:
+*         description: Not found
+*       500:
+*         description: Internal Server error
+*/
+Router.get('/getDistrictsByProvince/:province_id', (req, res) => {
     let province_id = req.params.province_id;
-    dbConnection.query("SELECT * FROM dms_districts WHERE province_id = ?",[province_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_districts WHERE province_id = ?", [province_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
         }
-        else if(!error) {;
+        else if (!error) {
+            ;
 
-            if(rows.length === 0){
+            if (rows.length === 0) {
 
-                return res.status(404).send({success: false, message: 'No districts with that province id not found'})
-                
+                return res.status(404).send({ success: false, message: 'No districts with that province id not found' })
+
             }
-            else{
-                 return res.status(200).send({success:true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
             // return res.status
@@ -281,21 +282,21 @@ Router.get('/getDistrictsByProvince/:province_id',(req,res)=>{
  *       500:
  *         description: Internal Server error
  */
-Router.get('/getSectors',(req,res) => {
-    dbConnection.query("SELECT * FROM dms_sectors",(err,rows,fields)=>{
-        if(!err){
-           
-            
-            if(rows.length === 0){
+Router.get('/getSectors', (req, res) => {
+    dbConnection.query("SELECT * FROM dms_sectors", (err, rows, fields) => {
+        if (!err) {
 
-                return res.status(404).send({success: false , message: 'No records found in the found'})
+
+            if (rows.length === 0) {
+
+                return res.status(404).send({ success: false, message: 'No records found in the found' })
             }
-            else{
-                 return res.status(200).send({success: true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
         }
-        else{
+        else {
             throw err;
         }
     })
@@ -315,23 +316,23 @@ Router.get('/getSectors',(req,res) => {
  *       500:
  *         description: Internal Server error
  */
-Router.get('/getSectorById/:sector_id',(req,res)=>{
+Router.get('/getSectorById/:sector_id', (req, res) => {
     let sector_id = req.params.sector_id;
-    dbConnection.query("SELECT * FROM dms_sectors WHERE sector_id = ?",[sector_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_sectors WHERE sector_id = ?", [sector_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
         }
-        else if(!error) {
-             console.log(rows.length);
+        else if (!error) {
+            console.log(rows.length);
 
-            if(rows.length === 0){
+            if (rows.length === 0) {
 
-                return res.status(404).send({success: false, message: 'sector not found'})
-                
+                return res.status(404).send({ success: false, message: 'sector not found' })
+
             }
-            else{
-                 return res.status(200).send({success: true, data: rows[0] })
+            else {
+                return res.status(200).send({ success: true, data: rows[0] })
             }
 
             // return res.status
@@ -358,22 +359,23 @@ Router.get('/getSectorById/:sector_id',(req,res)=>{
  *       500:
  *         description: Internal Server error
  */
-Router.get('/getSectorsByDistricts/:district_id',(req,res)=>{
+Router.get('/getSectorsByDistricts/:district_id', (req, res) => {
     let district_id = req.params.district_id;
-    dbConnection.query("SELECT * FROM dms_sectors WHERE district_id = ?",[district_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_sectors WHERE district_id = ?", [district_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
         }
-        else if(!error) {;
+        else if (!error) {
+            ;
 
-            if(rows.length === 0){
+            if (rows.length === 0) {
 
-                return res.status(404).send({ success: false, message: 'No sectors with that district id not found'})
-                
+                return res.status(404).send({ success: false, message: 'No sectors with that district id not found' })
+
             }
-            else{
-                 return res.status(200).send({success: true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
             // return res.status
@@ -400,21 +402,21 @@ Router.get('/getSectorsByDistricts/:district_id',(req,res)=>{
  *       500:
  *         description: Internal Server error
  */
-Router.get('/getCells',(req,res)=>{
-    dbConnection.query("SELECT * FROM dms_cells",(err,rows,fields)=>{
-        if(!err){
-           
-            
-            if(rows.length === 0){
+Router.get('/getCells', (req, res) => {
+    dbConnection.query("SELECT * FROM dms_cells", (err, rows, fields) => {
+        if (!err) {
 
-                return res.status(404).send({success: false, message: 'No records found in the found'})
+
+            if (rows.length === 0) {
+
+                return res.status(404).send({ success: false, message: 'No records found in the found' })
             }
-            else{
-                 return res.status(200).send({success: true, data: rows})
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
         }
-        else{
+        else {
             throw err;
         }
     })
@@ -434,23 +436,23 @@ Router.get('/getCells',(req,res)=>{
  *       500:
  *         description: Internal Server error
  */
-Router.get('/getCellById/:cell_id',(req,res)=>{
+Router.get('/getCellById/:cell_id', (req, res) => {
     let cell_id = req.params.cell_id;
-    dbConnection.query("SELECT * FROM dms_cells WHERE cell_id = ?",[cell_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_cells WHERE cell_id = ?", [cell_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
         }
-        else if(!error) {
-             console.log(rows.length);
+        else if (!error) {
+            console.log(rows.length);
 
-            if(rows.length === 0){
+            if (rows.length === 0) {
 
-                return res.status(404).send({success: false, message: 'cell not found'})
-                
+                return res.status(404).send({ success: false, message: 'cell not found' })
+
             }
-            else{
-                 return res.status(200).send({success: true, data: rows[0] })
+            else {
+                return res.status(200).send({ success: true, data: rows[0] })
             }
 
             // return res.status
@@ -477,22 +479,23 @@ Router.get('/getCellById/:cell_id',(req,res)=>{
 *       500:
 *         description: Internal Server error
 */
-Router.get('/getCellsBySectors/:sector_id',(req,res)=>{
+Router.get('/getCellsBySectors/:sector_id', (req, res) => {
     let sector_id = req.params.sector_id;
-    dbConnection.query("SELECT * FROM dms_cells WHERE sector_id = ?",[sector_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_cells WHERE sector_id = ?", [sector_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
         }
-        else if(!error) {;
+        else if (!error) {
+            ;
 
-            if(rows.length === 0){
+            if (rows.length === 0) {
 
-                return res.status(404).send({success:false, message: 'No cells with that sector id not found'})
-                
+                return res.status(404).send({ success: false, message: 'No cells with that sector id not found' })
+
             }
-            else{
-                 return res.status(200).send({success: true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
             // return res.status
@@ -519,26 +522,26 @@ Router.get('/getCellsBySectors/:sector_id',(req,res)=>{
 *       500:
 *         description: Internal Server error
 */
-Router.get('/getVillages',(req,res) => {
-    dbConnection.query("SELECT * FROM dms_villages LIMIT 10",(err,rows,fields)=>{
+Router.get('/getVillages', (req, res) => {
+    dbConnection.query("SELECT * FROM dms_villages LIMIT 10", (err, rows, fields) => {
         try {
-            if(!err){
-        
-            
-                if(rows.length === 0){
-    
-                    return res.status(404).send({success: false, message: 'No records found in the found'})
+            if (!err) {
+
+
+                if (rows.length === 0) {
+
+                    return res.status(404).send({ success: false, message: 'No records found in the found' })
                 }
-                else{
-                     return res.status(200).send({success: true,data: rows })
+                else {
+                    return res.status(200).send({ success: true, data: rows })
                 }
-    
+
             }
-            else{
+            else {
                 throw err;
             }
         } catch (error) {
-            return res.status(500).send({success: false, data: "internal server error"});
+            return res.status(500).send({ success: false, data: "internal server error" });
         }
 
     })
@@ -558,34 +561,34 @@ Router.get('/getVillages',(req,res) => {
  *       500:
  *         description: Internal Server error
  */
-Router.get('/getVillageById/:village_id',(req,res)=>{
+Router.get('/getVillageById/:village_id', (req, res) => {
     try {
         let village_id = req.params.village_id;
-        dbConnection.query("SELECT * FROM dms_villages WHERE village_id = ?",[village_id],(error,rows,fields)=>{
-            if(error){
+        dbConnection.query("SELECT * FROM dms_villages WHERE village_id = ?", [village_id], (error, rows, fields) => {
+            if (error) {
                 return res.status(400).send({ data: rows[0], message: 'Bad request' })
-    
+
             }
-            else if(!error) {
-                 console.log(rows.length);
-    
-                if(rows.length === 0){
-    
-                    return res.status(404).send({success: false, message: 'village not found'})
-                    
+            else if (!error) {
+                console.log(rows.length);
+
+                if (rows.length === 0) {
+
+                    return res.status(404).send({ success: false, message: 'village not found' })
+
                 }
-                else{
-                     return res.status(200).send({success: true, data: rows[0] })
+                else {
+                    return res.status(200).send({ success: true, data: rows[0] })
                 }
-    
+
                 // return res.status
             }
-    
+
         })
     }
 
     catch (error) {
-        return res.send({success:false, data: "internal server error"})
+        return res.send({ success: false, data: "internal server error" })
     }
 })
 /**
@@ -607,22 +610,23 @@ Router.get('/getVillageById/:village_id',(req,res)=>{
 *       500:
 *         description: Internal Server error
 */
-Router.get('/getVillagesByCells/:cell_id',(req,res)=>{
+Router.get('/getVillagesByCells/:cell_id', (req, res) => {
     let cell_id = req.params.cell_id;
-    dbConnection.query("SELECT * FROM dms_villages WHERE cell_id = ?",[cell_id],(error,rows,fields)=>{
-        if(error){
+    dbConnection.query("SELECT * FROM dms_villages WHERE cell_id = ?", [cell_id], (error, rows, fields) => {
+        if (error) {
             return res.status(400).send({ data: rows[0], message: 'Bad request' })
 
         }
-        else if(!error) {;
+        else if (!error) {
+            ;
 
-            if(rows.length === 0){
+            if (rows.length === 0) {
 
-                return res.status(404).send({success: false, message: 'No villages with that cell id not found'})
-                
+                return res.status(404).send({ success: false, message: 'No villages with that cell id not found' })
+
             }
-            else{
-                 return res.status(200).send({success: true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
             // return res.status
@@ -650,38 +654,74 @@ Router.get('/getVillagesByCells/:cell_id',(req,res)=>{
 *         description: Internal Server error
 */
 
-Router.get('/getAllLocations/',(req,res)=>{
-    dbConnection.query("SELECT * FROM dms_provinces JOIN dms_districts ON (dms_districts.province_id = dms_provinces.province_id) JOIN dms_sectors ON (dms_sectors.district_id = dms_districts.district_id) JOIN dms_cells ON (dms_cells.sector_id = dms_sectors.sector_id) JOIN dms_villages ON (dms_villages.cell_id = dms_cells.cell_id)",(err,rows,fields)=>{
-        if(!err){
-            
-            
-            if(rows.length === 0){
+Router.get('/getAllLocations/', (req, res) => {
+    dbConnection.query("SELECT * FROM dms_provinces JOIN dms_districts ON (dms_districts.province_id = dms_provinces.province_id) JOIN dms_sectors ON (dms_sectors.district_id = dms_districts.district_id) JOIN dms_cells ON (dms_cells.sector_id = dms_sectors.sector_id) JOIN dms_villages ON (dms_villages.cell_id = dms_cells.cell_id)", (err, rows, fields) => {
+        if (!err) {
 
-                return res.status(404).send({success: false, message: 'No records found in the found'})
+
+            if (rows.length === 0) {
+
+                return res.status(404).send({ success: false, message: 'No records found in the found' })
             }
-            else{
-                 return res.status(200).send({success:true, data: rows })
+            else {
+                return res.status(200).send({ success: true, data: rows })
             }
 
         }
-        else{
+        else {
             throw err;
         }
     })
 })
- /**
- * @swagger
- * /api/v1/locations/getAllLocations/:
- *   get:
- *     tags:
- *       - locations
- *     description: Get all locations
- *     responses:
- *       200:
- *         description: OK
- *       404:
- *         description: Not found
- *       500:
- *         description: Internal Server error
- */
+/**
+* @swagger
+* /api/v1/locations/getAllLocations/:
+*   get:
+*     tags:
+*       - locations
+*     description: Get all locations
+*     responses:
+*       200:
+*         description: OK
+*       404:
+*         description: Not found
+*       500:
+*         description: Internal Server error
+*/
+
+Router.get('/getAllLocationsByDistrict/', (req, res) => {
+    dbConnection.query("SELECT * FROM dms_districts JOIN dms_sectors ON (dms_sectors.district_id = dms_districts.district_id) JOIN dms_cells ON (dms_cells.sector_id = dms_sectors.sector_id) JOIN dms_villages ON (dms_villages.cell_id = dms_cells.cell_id)", (err, rows, fields) => {
+        if (!err) {
+
+
+            if (rows.length === 0) {
+
+                return res.status(404).send({ success: false, message: 'No records found in the found' })
+            }
+            else {
+                return res.status(200).send({ success: true, data: rows })
+            }
+
+        }
+        else {
+            throw err;
+        }
+    })
+})
+/**
+* @swagger
+* /api/v1/locations/getAllLocationsByDistrict/:
+*   get:
+*     tags:
+*       - locations
+*     description: Get all locations
+*     responses:
+*       200:
+*         description: OK
+*       404:
+*         description: Not found
+*       500:
+*         description: Internal Server error
+*/
+
 module.exports = Router;

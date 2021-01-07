@@ -310,18 +310,19 @@ module.exports.createLevelSignature = async (req, res) => {
         })
 }
 exports.login = async(req,res) => {
-    let user_id = req.params['id'];
-    user_id.trim();
-
-    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE user_id = ?",
-    [user_id],  async(err, rowsFound, fields) => {
+    // let user_id = req.params['id'];
+    // user_id.trim();
+console.log(req.body)
+    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE email = ?",
+    [req.body.email],  async(err, rowsFound, fields) => {
         if (!err) {
+            
             if(!rowsFound.length > 0) return res.status(400).send({ success: false, data: "nothing found" });
             const userId = rowsFound[0].user_id;
             const matchedPassword = await bcrypt.compare(req.body.password,rowsFound[0].password);
             if(!matchedPassword)  return res.status(400).send({success: false, data: "invalid email or password"})
 
-            return res.status(200).send({success: true,data: rowsFound, token: generateAuthToken(userId)})
+            return res.status(201).send({success: true, token: generateAuthToken(userId)})
         } else {
             return res.send({ success: false, data: err })
         }

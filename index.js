@@ -12,7 +12,7 @@ const morgan = require('morgan');
 const path = require('path')
 const dotenv = require('dotenv')
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 4008;
 
 const { protect,authorize } = require('./middleware/auth')
 
@@ -34,23 +34,23 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 const swaggerOptions = {
     swaggerDefinition : {
-        // openapi: '3.0.1',
-        info: {
-            title: "DMS API",
-            description:  "Disaster management system to help Rwanda manage its disasters",
-            version: '1.0.0',
-            contact: {
-                email: "mdenyse15@gmail.com" ,
-                name : "e-squadrons"
+        openapi: '3.0.1',
+            info: {
+                title: "DMS API",
+                description:  "Disaster management system to help Rwanda manage its disasters",
+                version: '1.0.0',
+                contact: {
+                    email: "mdenyse15@gmail.com" ,
+                    name : "e-squadrons"
+                },
             },
-        },
             servers: [
             {
                 url: "https://disaster-management-squadrons.herokuapp.com",
                 description: "Production server"
               },
               {
-                url: "http://localhost:5000",
+                url: "http://localhost:4008/api-docs",
                 description: "Development server"
               }
             ],
@@ -98,6 +98,7 @@ app.use((req, res, next) => {
     next();
 });
 
+// app.get("/api-docs",swaggerUi.setup(specs,{explorer: true}))
 app.use("/api/v1/users", usersRoute);
 app.use("/api/v1/victims", victimRoute);
 app.use("/api/v1/levels", levelsRoute);
