@@ -68,6 +68,8 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
         } else if (matched) {
             victim_pin = req.body.village_id 
 
+           victim_pin = req.body.village_id 
+
             let inserts = [
                 uuidv4(),
                 victim_pin,

@@ -690,18 +690,41 @@ Router.get('/getAllLocations/', (req, res) => {
 */
 
 Router.get('/getAllLocationsByDistrict/', (req, res) => {
-    dbConnection.query("SELECT * FROM dms_districts JOIN dms_sectors ON (dms_sectors.district_id = dms_districts.district_id) JOIN dms_cells ON (dms_cells.sector_id = dms_sectors.sector_id) JOIN dms_villages ON (dms_villages.cell_id = dms_cells.cell_id)", (err, rows, fields) => {
+    dbConnection.query("SELECT * FROM dms_districts", (err, rowsFound, fields) => {
         if (!err) {
-
-
-            if (rows.length === 0) {
+            if (rowsFound.length === 0) {
 
                 return res.status(404).send({ success: false, message: 'No records found in the found' })
             }
             else {
-                return res.status(200).send({ success: true, data: rows })
-            }
+                const district_names = []
+                for (const i in rowsFound) {
+                    const element = rowsFound[i];
+                    dbConnection.query("SELECT * FROM dms_sectors WHERE district_id = ? ", [element.district_id], (err, rows, fields) => {
+                        if (!err) {
+                            if (rows.length === 0) {
 
+                                // return res.status(404).send({ success: false, message: 'No records found in the found' })
+                            }
+                            else {
+                                district_names.push(rows);
+                                if (i == rowsFound.length - 1) {
+                                    district_names.sort((a, b) => {
+                                        if (a[0].district_id > b[0].district_id) return 1;
+                                        return -1;
+                                    })
+                                    return res.status(200).send({ success: true, message: district_names })
+                                }
+                            }
+
+                        }
+                        else {
+                            throw err;
+                        }
+                    })
+                }
+
+            }
         }
         else {
             throw err;

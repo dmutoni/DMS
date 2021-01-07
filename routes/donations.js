@@ -52,7 +52,7 @@ const { protect,authorize } = require('../middleware/auth')
  *         description: Internal Server error
  */
 
-router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getDonations)
+router.route('/').get(getDonations)
 /**
  * @swagger
  * /api/v1/donations:
@@ -81,7 +81,7 @@ router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getDonat
  *      500:
  *        description: Internal Server error
  */
-router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createDonation)
+router.route('/').post(createDonation)
 /**
  * @swagger
  * /api/v1/donations/{donation_id}:
@@ -113,7 +113,7 @@ router.route('/').post(protect,authorize('SECTOR','DISTRICT','NATIONAL'),createD
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updateDonation)
+router.route('/:id').put(updateDonation)
 /**
  * @swagger
  * /api/v1/donations/{donation_id}:
@@ -141,9 +141,9 @@ router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updat
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').delete(protect,authorize('SECTOR','DISTRICT','NATIONAL'),deleteDonation)
+router.route('/:id').delete(deleteDonation)
 
-router.route('/getDonationsById/:id').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getDonationById)
+router.route('/getDonationsById/:id').get(getDonationById)
 
 /**
  * @swagger

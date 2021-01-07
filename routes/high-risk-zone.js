@@ -67,7 +67,7 @@ const router = express.Router({ mergeParams: true })
  *       500:
  *         description: Internal Server error
  */
-router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),get_h_zones)
+router.route('/').get(get_h_zones)
 /**
  * @swagger
  * /api/v1/h_zones/images/{id}:
@@ -94,7 +94,7 @@ router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),get_h_zo
  *        description: Internal Server error
  */
 
-router.route('/').post(protect,authorize('SECTOR'),create_h_zone)
+router.route('/').post(create_h_zone)
 /**
  * @swagger
  * /api/v1/h_zones:
@@ -121,7 +121,7 @@ router.route('/').post(protect,authorize('SECTOR'),create_h_zone)
  *        description: Internal Server error
  */
 
-router.route('/images/:id').post(protect,authorize('SECTOR'),[CREATE_DIR("hZoneImages"),upload.array('files',5),create_h_images])
+router.route('/images/:id').post([CREATE_DIR("hZoneImages"),upload.array('files',5),create_h_images])
 
 /**
  * @swagger
@@ -154,7 +154,7 @@ router.route('/images/:id').post(protect,authorize('SECTOR'),[CREATE_DIR("hZoneI
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').put(protect,authorize('SECTOR'),update_h_zone)
+router.route('/:id').put(update_h_zone)
 /**
  * @swagger
  * /api/v1/h_zones/{h_zone_id}:
@@ -183,9 +183,9 @@ router.route('/:id').put(protect,authorize('SECTOR'),update_h_zone)
  *        description: Internal Server error
  */
 
-router.route('/:id').delete(protect,authorize('SECTOR'),delete_h_zone)
+router.route('/:id').delete(delete_h_zone)
 
-router.route('/getHighRiskZoneById/:id').get(protect,authorize('SECTOR'),get_h_zoneById)
+router.route('/getHighRiskZoneById/:id').get(get_h_zoneById)
 
 /**
  * @swagger

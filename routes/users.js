@@ -6,11 +6,11 @@ const {
     deleteUser,
     getUserById,
     createUSerSignature,
-    createLevelSignature, 
-    login} = require('../controllers/users.controller')
+    createLevelSignature,
+    login } = require('../controllers/users.controller')
 const { upload } = require('../functions/insertFile')
-const {CREATE_DIR} = require('../middleware/createUploadDirectory')
-const { protect,authorize } = require('../middleware/auth')
+const { CREATE_DIR } = require('../middleware/createUploadDirectory')
+const { protect, authorize } = require('../middleware/auth')
 // const { route } = require('./UserTypes')
 /**
 * @swagger
@@ -87,7 +87,7 @@ const router = express.Router({ mergeParams: true })
  *       500:
  *         description: Internal Server error
  */
-router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUsers)
+router.route('/').get(getUsers)
 /**
  * @swagger
  * /api/v1/users:
@@ -118,7 +118,7 @@ router.route('/').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUsers
  */
 
 
-router.route('/getUserId/:id').get(protect,authorize('SECTOR','DISTRICT','NATIONAL'),getUserById)
+router.route('/getUserId/:id').get(getUserById)
 
 /**
  * @swagger
@@ -181,7 +181,7 @@ router.route('/').post(createUser)
  *        description: Internal Server error
  */
 
-router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updateUser)
+router.route('/:id').put(updateUser)
 
 /**
  * @swagger
@@ -210,9 +210,9 @@ router.route('/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),updat
  *      500:
  *        description: Internal Server error
  */
-router.route('/deleteUser/:id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),deleteUser)
+router.route('/deleteUser/:id').put(deleteUser)
 
-router.route('/addUserSignature/:user_id').put(protect,authorize('SECTOR','DISTRICT','NATIONAL'),[CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
+router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 
 /**
  * @swagger
@@ -241,7 +241,7 @@ router.route('/addUserSignature/:user_id').put(protect,authorize('SECTOR','DISTR
  */
 
 
-router.route('/addLevelsStamp/:user_id').put(protect,authorize('DISTRICT','NATIONAL'),[CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
+router.route('/addLevelsStamp/:user_id').put([CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
 
 /**
  * @swagger
