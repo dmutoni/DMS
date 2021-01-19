@@ -85,7 +85,7 @@ module.exports.createUser=asyncHandler(async (req,res) => {
                 req.body.job_title,
                 req.body.sector_id,
                 req.body.user_type,
-                req.body.user_status
+                "ACTIVE"
             ]
             let sql="INSERT INTO dms_users(user_id,first_name,last_name,gender,email,phone_number,national_id,password,job_title,sector_id,user_type,user_status) VALUES (?);";
             await dbConnection.query(sql,[inserts],(err,results,fields) => {
