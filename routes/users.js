@@ -14,11 +14,10 @@ const { protect, authorize } = require('../middleware/auth')
 // const { route } = require('./UserTypes')
 /**
 * @swagger
-* components:
+* definitions:
 *   users:
 *     required:          
 *       - first_name
-*       - last_name
 *       - gender
 *       - age
 *       - job_title
