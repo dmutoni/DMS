@@ -45,9 +45,9 @@ module.exports.getUserById=asyncHandler(async (req,res) => {
     dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE user_id = ?",
         [user_id],function(err,rowsFound,fields) {
             if(!err) {
-                return res.send({success: true,data: rowsFound});
+                return res.status(200).send({success: true,data: rowsFound});
             } else {
-                return res.send({success: false,data: err})
+                return res.status(404).send({success: false,data: err})
             }
         })
 })
@@ -315,10 +315,10 @@ exports.login=async (req,res) => {
         [req.body.email],async (err,rowsFound,fields) => {
             if(!err) {
 
-                if(!rowsFound.length>0) return res.status(400).send({success: false,data: "nothing found"});
+                if(!rowsFound.length>0) return res.status(400).send({success: false,data: "INVALID CREDENTIALS"});
                 const userId=rowsFound[0].user_id;
                 const matchedPassword=await bcrypt.compare(req.body.password,rowsFound[0].password);
-                if(!matchedPassword) return res.status(400).send({success: false,data: "invalid email or password"})
+                if(!matchedPassword) return res.status(400).send({success: false,data: "INVALID CREDENTIALS"})
 
                 return res.status(201).send({success: true,token: generateAuthToken(userId)})
             } else {
