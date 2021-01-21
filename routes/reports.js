@@ -1,21 +1,21 @@
-const express = require('express')
-const { 
-    getReports, 
-    createReport, 
+const express=require('express')
+const {
+    getReports,
+    createReport,
     updateReport,
-    deleteReport, 
-    getReport, 
+    deleteReport,
+    getReport,
     getReportsBySector,
     getReportsById,
     returnVictimReportJoined,
     pushReportToDistrict,
-    pushReportToNationalLevel} = require('../controllers/reports.controller')
-    // const { route } = require('./ReportTypes')
+    pushReportToNationalLevel}=require('../controllers/reports.controller')
+// const { route } = require('./ReportTypes')
 
-const { protect,authorize } = require('../middleware/auth')
+const {protect,authorize}=require('../middleware/auth')
 
 
-const router = express.Router({ mergeParams: true })
+const router=express.Router({mergeParams: true})
 /**
  * @swagger
  * definitions:
@@ -44,7 +44,7 @@ const router = express.Router({ mergeParams: true })
  *          type: string
  *       state:
  *          type: string
- */ 
+ */
 
 /**
  * @swagger
@@ -153,11 +153,38 @@ router.route('/:id').put(updateReport)
  *        description: Internal Server error
  */
 router.route('/:id').delete(deleteReport)
+/**
+ * @swagger
+ * /api/v1/reports/getReportsBySector/{report_id}:
+ *   get:
+ *    tags:
+ *      - reports
+ *    description: get reports by sector
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "report_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/reports'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
 
 router.route('/getReportsById/:id').get(getReportsById)
 /**
  * @swagger
- * /api/v1/reports/getReportsBySector/{report_id}:
+ * /api/v1/reports/getReportsById/{report_id}:
  *   get:
  *    tags:
  *      - reports
@@ -217,9 +244,9 @@ router.route('/pushReportToNationalLevel/:id').put(pushReportToNationalLevel)
  *        description: Internal Server error
  */
 
- router.route('/getReportsNamesVictimsJoined').get(returnVictimReportJoined);
+router.route('/getReportsNamesVictimsJoined').get(returnVictimReportJoined);
 
- 
+
 /**
  * @swagger
  * /api/v1/reports/getReportsNamesVictimsJoined:
@@ -237,7 +264,7 @@ router.route('/pushReportToNationalLevel/:id').put(pushReportToNationalLevel)
  */
 
 
-module.exports = router
+module.exports=router
 
 
 
