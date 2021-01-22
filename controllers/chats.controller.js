@@ -69,48 +69,35 @@ module.exports.createMessage = asyncHandler( async ( req, res ) => {
 
     } )
 } )
-// module.exports.updateLevel = asyncHandler( async ( req, res ) => {
-//     let level_id = req.params[ 'id' ];
-//     level_id.trim()
-//     const validation = new Validator( req.body, {
-//         level_title: 'required',
-//         level_system_users_counter: 'required',
-//         level_short_bio: 'required',
-//         level_status: 'required'
-//     } );
-//     validation.check().then( async ( matched ) => {
-//         if ( !matched ) {
-//             res.status( 422 ).send( validation.errors );
-//         } else if ( matched ) {
-//             // console.log(level);
-//             let inserts = {
-//                 level_id: req.params.id,
-//                 level_title: req.body.level_title,
-//                 level_short_bio: req.body.level_short_bio,
-//                 level_system_users_counter: req.body.level_system_users_counter,
-//                 level_status: req.body.level_status,
-//             }
+module.exports.updateMessage = asyncHandler( async ( req, res ) => {
+    let message_id = req.params[ 'id' ];
+    level_id.trim()
+    const validation = new Validator( req.body, {
+        seen: 'required|boolean'
+    } );
+    validation.check().then( async ( matched ) => {
+        if ( !matched ) {
+            res.status( 422 ).send( validation.errors );
+        } else if ( matched ) {
+            // console.log(level);
+            let inserts = {
+                level_id: req.params.id,
+                level_title: req.body.level_title,
+                level_short_bio: req.body.level_short_bio,
+                level_system_users_counter: req.body.level_system_users_counter,
+                level_status: req.body.level_status,
+            }
 
-//             console.log( inserts );
-//             if ( !level_id || !inserts ) {
-//                 return res.status( 400 ).send( {error: level, message: 'Please provide level and level id'} );
-//             }
-//             await dbConnection.query( "UPDATE dms_levels SET ?  WHERE level_id = ?", [ inserts, level_id ], function ( error, results, fields ) {
-//                 if ( error ) throw error;
-//                 return res.send( {error: false, data: results, message: 'level has been updated successfully.'} );
-//             } )
-//         }
-//     } );
-// } );
-// module.exports.deleteLevel = asyncHandler( async ( req, res ) => {
-//     let level_id = req.params[ 'id' ];
-//     level_id.trim()
-//     if ( !level_id ) {
-//         return res.status( 400 ).send( {error: true, message: 'Please provide a level id'} );
-//     }
-//     await dbConnection.query( 'DELETE FROM dms_levels WHERE level_id = ?', [ level_id ], function ( error, results, fields ) {
-//         if ( error ) throw error;
-//         return res.send( {error: false, data: results, message: 'level has been delete successfully.'} );
-//     } );
-// } )
+            console.log( inserts );
+            if ( !level_id || !inserts ) {
+                return res.status( 400 ).send( {error: level, message: 'Please provide level and level id'} );
+            }
+            await dbConnection.query( "UPDATE dms_levels SET ?  WHERE level_id = ?", [ inserts, level_id ], function ( error, results, fields ) {
+                if ( error ) throw error;
+                return res.send( {error: false, data: results, message: 'level has been updated successfully.'} );
+            } )
+        }
+    } );
+} );
+
 

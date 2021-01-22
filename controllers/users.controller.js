@@ -148,10 +148,16 @@ module.exports.updateUser = asyncHandler( async ( req, res ) => {
                     res.status( 401 ).send( {error: error.sqlMessage} )
                     // throw err;
                 } else {
-                    console.log( results );
-                    console.log( "reached" ) // results.send("row inserted");
+                    dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE user_id = ?",
+                        [ user_id ], function ( err, rowsFound, fields ) {
+                            if ( !err ) {
+                                return res.status( 200 ).send( {success: true, data: rowsFound} );
+                            } else {
+                                return res.status( 404 ).send( {success: false, data: err} )
+                            }
+                        } )
 
-                    return res.status( 201 ).send( {error: false, data: inserts, message: 'user has been updated successfully.'} );
+                    // return res.status( 201 ).send( {error: false, data: inserts, user_id , message: 'user has been updated successfully.'} );
                     // console.log("Row inserted: "+ results.affectedRows);
                 };
             } )
@@ -326,4 +332,59 @@ exports.login = async ( req, res ) => {
                 return res.send( {success: false, data: err} )
             }
         } )
-} 
+}
+// exports.updatePassword = async ( req, res ) => {
+
+
+
+
+//     const validation = new Validator( req.body, {
+//         user_id: 'required',
+//         current_password: 'required',
+//         new_password: 'required'
+//     } );
+
+
+
+//     validation.check().then( async ( matched ) => {
+//         if ( !matched ) {
+//             return res.status( 422 ).send( validation.errors );
+//         } else if ( matched ) {
+//             let inserts = {
+//                 user_id: req.params.id,
+//                 password: req.body.new_password
+//             }
+//             console.log( inserts );
+//             if (!inserts ) {
+//                 return res.status( 400 ).send( {error: level, message: 'Please provide '} );
+//             }
+//             await dbConnection.query( "UPDATE dms_levels SET ?  WHERE level_id = ?", [ inserts, level_id ], function ( error, results, fields ) {
+//                 if ( error ) throw error;
+//                 return res.send( {error: false, data: results, message: 'level has been updated successfully.'} );
+//             } )
+//         }
+//     }
+
+//     } )    try {
+//             if ( !validObjectId( req.params.id ) ) return res.status( 400 ).send( {message: "invalid id"} )
+//             const {error} = validatePasswordUpdate( req.body );
+//             console.log( "Reached" )
+
+//             if ( error ) return res.status( 400 ).send( error.details[ 0 ].message );
+//             const user = await User.findById( req.params.id );
+//             if ( !user ) return res.status( 404 ).send( 'User not found' );
+
+//             const validPassword = await bcrypt.compare( req.body.currentPassword, user.password );
+
+//             if ( !validPassword ) return res.status( 400 ).send( {message: "Invalid email or password"} );
+//             const hashedPassword = await hashPassword( req.body.newPassword );
+
+//             const updated = await User.findByIdAndUpdate( req.params.id, {password: hashedPassword}, {new: true} );
+
+//             if ( !updated ) return res.status( 500 ).send( {message: "password not updated"} );
+//             return res.status( 201 ).send( {message: 'password updated successfully', data: updated} );
+
+//         } catch ( e ) {
+//             if ( !updated ) return res.status( 500 ).send( {message: "password not updated"} );
+//         }
+//     }
