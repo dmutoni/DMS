@@ -68,7 +68,17 @@ const {protect, authorize} = require( '../middleware/auth' )
 *         password:
 *           type: string
 */
-
+/**
+* @swagger
+* components:
+*   schemas:
+*     UPDATE_PASSWORD:
+*       properties:
+*         current_password:
+*           type: string
+*         new_password:
+*           type: string
+*/
 
 const router = express.Router( {mergeParams: true} )
 /**
@@ -170,7 +180,7 @@ router.route( '/' ).post( createUser )
  *        in: body
  *        required: true
  *        schema:
- *          $ref: '#/components/users'
+ *          $ref: '#/components/schemas/users'
  *    responses:
  *      201:
  *        description: updated
@@ -188,7 +198,7 @@ router.route( '/:id' ).put( updateUser )
  *   put:
  *    tags:
  *      - users
- *    description: Update a user
+ *    description: delete a user
  *    consumes:
  *      - "application/json"
  *      - "application/xml"
@@ -298,5 +308,37 @@ router.route( '/login' ).post( login );
  *        description: Internal Server error
  */
 
-// router.route( '/changePassword' ).post( updatePassword );
+router.route( '/changePassword/:id' ).put( updatePassword );
+
+/**
+ * @swagger
+ * /api/v1/users/changePassword/{id}:
+ *   put:
+ *    tags:
+ *      - users
+ *    description: Update a user
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: id
+ *        in: path
+ *        required: true
+ *      - name: body
+ *        description: Fields for a user
+ *        in: body
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/schemas/UPDATE_PASSWORD'
+ *    responses:
+ *      201:
+ *        description: password updated successfully
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
 module.exports = router

@@ -333,58 +333,49 @@ exports.login = async ( req, res ) => {
             }
         } )
 }
-// exports.updatePassword = async ( req, res ) => {
+exports.updatePassword = async ( req, res ) => {
+    let user_id = req.params[ 'id' ];
+    user_id.trim()
+    const validation = new Validator( req.body, {
+        current_password: 'required',
+        new_password: 'required'
+    } );
+    try {
 
-
-
-
-//     const validation = new Validator( req.body, {
-//         user_id: 'required',
-//         current_password: 'required',
-//         new_password: 'required'
-//     } );
-
-
-
-//     validation.check().then( async ( matched ) => {
-//         if ( !matched ) {
-//             return res.status( 422 ).send( validation.errors );
-//         } else if ( matched ) {
-//             let inserts = {
-//                 user_id: req.params.id,
-//                 password: req.body.new_password
-//             }
-//             console.log( inserts );
-//             if (!inserts ) {
-//                 return res.status( 400 ).send( {error: level, message: 'Please provide '} );
-//             }
-//             await dbConnection.query( "UPDATE dms_levels SET ?  WHERE level_id = ?", [ inserts, level_id ], function ( error, results, fields ) {
-//                 if ( error ) throw error;
-//                 return res.send( {error: false, data: results, message: 'level has been updated successfully.'} );
-//             } )
-//         }
-//     }
-
-//     } )    try {
-//             if ( !validObjectId( req.params.id ) ) return res.status( 400 ).send( {message: "invalid id"} )
-//             const {error} = validatePasswordUpdate( req.body );
-//             console.log( "Reached" )
-
-//             if ( error ) return res.status( 400 ).send( error.details[ 0 ].message );
-//             const user = await User.findById( req.params.id );
-//             if ( !user ) return res.status( 404 ).send( 'User not found' );
-
-//             const validPassword = await bcrypt.compare( req.body.currentPassword, user.password );
-
-//             if ( !validPassword ) return res.status( 400 ).send( {message: "Invalid email or password"} );
-//             const hashedPassword = await hashPassword( req.body.newPassword );
-
-//             const updated = await User.findByIdAndUpdate( req.params.id, {password: hashedPassword}, {new: true} );
-
-//             if ( !updated ) return res.status( 500 ).send( {message: "password not updated"} );
-//             return res.status( 201 ).send( {message: 'password updated successfully', data: updated} );
-
-//         } catch ( e ) {
-//             if ( !updated ) return res.status( 500 ).send( {message: "password not updated"} );
-//         }
-//     }
+        validation.check().then( async ( matched ) => {
+            if ( !matched ) {
+                return res.status( 422 ).send( validation.errors );
+            } else if ( matched ) {
+                const hashedPassword = await hashPassword( req.body.new_password );
+                let inserts = {
+                    password: hashedPassword
+                }
+                if ( !inserts ) {
+                    return res.status( 400 ).send( {error: level, message: 'Please provide a full fields'} );
+                }
+                dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE user_id = ?",
+                    [ user_id ], async function ( err, rowsFound, fields ) {
+                        if ( !err ) {
+                            if ( !( rowsFound.length > 0 ) )
+                                return res.status( 400 ).send( {success: true, data: "no such user found"} );
+                            console.log( rowsFound[ 0 ].password )
+                            const validPassword = await bcrypt.compare( req.body.current_password, rowsFound[ 0 ].password );
+                            if ( !validPassword ) {
+                                return res.status( 400 ).send( {success: false, data: "passwords don't match"} )
+                            }
+                            dbConnection.query( "UPDATE dms_users SET ? where user_id = ? ", [ inserts, user_id ], function ( error, results, fields ) {
+                                if ( !error )
+                                    return res.status( 200 ).send( {success: true, data: "passwords updated successfully"} )
+                                return res.status( 400 ).send( {success: false, data: error} )
+                            } )
+                        } else {
+                            return res.status( 404 ).send( {success: false, data: err} )
+                        }
+                    } )
+            }
+        }
+        )
+    } catch ( error ) {
+        return res.status( 500 ).send( {success: false, data: error} )
+    }
+}

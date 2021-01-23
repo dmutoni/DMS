@@ -1,28 +1,30 @@
-const express = require('express')
-const { 
-    get_h_zones, 
-    create_h_zone, 
+const express = require( 'express' )
+const {
+    get_h_zones,
+    create_h_zone,
     update_h_zone,
-    delete_h_zone, 
+    delete_h_zone,
     create_h_images,
-    get_h_zoneById,
-    get_h_zone } = require('../controllers/high-risk-zone.controller')
+    get_h_zoneById} = require( '../controllers/high-risk-zone.controller' )
 
-const { upload } = require('../functions/insertFile');
-const { CREATE_DIR } = require('../middleware/createUploadDirectory');
-    // const { route } = require('./_h_zoneTypes')
-const { protect,authorize } = require('../middleware/auth')
+const {upload} = require( '../functions/insertFile' );
+const {CREATE_DIR} = require( '../middleware/createUploadDirectory' );
+const {protect, authorize} = require( '../middleware/auth' )
 
-const router = express.Router({ mergeParams: true })
+const router = express.Router( {mergeParams: true} )
 /**
  * @swagger
  * definitions:
  *   h_zone_image:
- *     required: 
- *       h_zone_image
+ *     required:
+ *       - files
  *     properties:
- *       files
+ *       dms_images_id:
+ *         type: string
+ *       files:
+ *         type: file
  */
+
 
 /**
  * @swagger
@@ -31,7 +33,6 @@ const router = express.Router({ mergeParams: true })
  *     required:          
  *       - zone_name
  *       - registered_by_user_id
- *       - picture_store
  *       - village_id
  *     properties:
  *       h_zone_id:
@@ -44,30 +45,25 @@ const router = express.Router({ mergeParams: true })
  *          type: string
  *       done_on: 
  *          type: string
- *       picture_store:
- *          type: string
- *       status:
- *          type: string 
- *          enum: ['ACTIVE', 'PENDING', 'DECLINED', 'CLOSED']
- */ 
-
-
- /**
- * @swagger
- * /api/v1/h_zones:
- *   get:
- *     tags:
- *       - h_zone
- *     description: Get all h_zone
- *     responses:
- *       200:
- *         description: OK
- *       404:
- *         description: Not found
- *       500:
- *         description: Internal Server error
  */
-router.route('/').get(get_h_zones)
+
+
+/**
+* @swagger
+* /api/v1/h_zones:
+*   get:
+*     tags:
+*       - h_zone
+*     description: Get all h_zone
+*     responses:
+*       200:
+*         description: OK
+*       404:
+*         description: Not found
+*       500:
+*         description: Internal Server error
+*/
+router.route( '/' ).get( get_h_zones )
 /**
  * @swagger
  * /api/v1/h_zones/images/{id}:
@@ -94,7 +90,7 @@ router.route('/').get(get_h_zones)
  *        description: Internal Server error
  */
 
-router.route('/').post(create_h_zone)
+router.route( '/' ).post( create_h_zone )
 /**
  * @swagger
  * /api/v1/h_zones:
@@ -121,7 +117,7 @@ router.route('/').post(create_h_zone)
  *        description: Internal Server error
  */
 
-router.route('/images/:id').post([CREATE_DIR("hZoneImages"),upload.array('files',5),create_h_images])
+router.route( '/images/:id' ).post( [ CREATE_DIR( "hZoneImages" ), upload.array( 'files', 5 ), create_h_images ] )
 
 /**
  * @swagger
@@ -154,7 +150,7 @@ router.route('/images/:id').post([CREATE_DIR("hZoneImages"),upload.array('files'
  *      500:
  *        description: Internal Server error
  */
-router.route('/:id').put(update_h_zone)
+router.route( '/:id' ).put( update_h_zone )
 /**
  * @swagger
  * /api/v1/h_zones/{h_zone_id}:
@@ -183,9 +179,9 @@ router.route('/:id').put(update_h_zone)
  *        description: Internal Server error
  */
 
-router.route('/:id').delete(delete_h_zone)
+router.route( '/:id' ).delete( delete_h_zone )
 
-router.route('/getHighRiskZoneById/:id').get(get_h_zoneById)
+router.route( '/getHighRiskZoneById/:id' ).get( get_h_zoneById )
 
 /**
  * @swagger
