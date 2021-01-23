@@ -8,7 +8,7 @@ const asyncHandler = require( '../middleware/async' );
 
 
 module.exports.get_h_zones = asyncHandler( async ( req, res ) => {
-    await dbConnection.query( "SELECT * FROM  dms_h_zone_images JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id)", ( err, rows, fields ) => {
+    await dbConnection.query( "SELECT * FROM  dms_h_zone_images RIGHT JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) RIGHT JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id)", ( err, rows, fields ) => {
         if ( !err ) {
             res.send( rows );
         } else {
