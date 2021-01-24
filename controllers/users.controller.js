@@ -322,10 +322,10 @@ exports.login = async ( req, res ) => {
         [ req.body.email ], async ( err, rowsFound, fields ) => {
             if ( !err ) {
 
-                if ( !rowsFound.length > 0 ) return res.status( 400 ).send( {success: false, data: "INVALID CREDENTIALS"} );
+                if ( !rowsFound.length > 0 ) return res.status( 400 ).send( {success: false, data: "invalid credentials "} );
                 const userId = rowsFound[ 0 ].user_id;
                 const matchedPassword = await bcrypt.compare( req.body.password, rowsFound[ 0 ].password );
-                if ( !matchedPassword ) return res.status( 400 ).send( {success: false, data: "INVALID CREDENTIALS"} )
+                if ( !matchedPassword ) return res.status( 400 ).send( {success: false, data: "invalid credentials "} )
 
                 return res.status( 201 ).send( {success: true, token: generateAuthToken( userId )} )
             } else {
@@ -361,7 +361,7 @@ exports.updatePassword = async ( req, res ) => {
                             console.log( rowsFound[ 0 ].password )
                             const validPassword = await bcrypt.compare( req.body.current_password, rowsFound[ 0 ].password );
                             if ( !validPassword ) {
-                                return res.status( 400 ).send( {success: false, data: "passwords don't match"} )
+                                return res.status( 400 ).send( {success: false, data: "Wrong Old password"} )
                             }
                             dbConnection.query( "UPDATE dms_users SET ? where user_id = ? ", [ inserts, user_id ], function ( error, results, fields ) {
                                 if ( !error )
