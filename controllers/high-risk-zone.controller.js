@@ -22,7 +22,7 @@ module.exports.get_h_zoneById = asyncHandler( async ( req, res ) => {
     let h_zone_id = req.params[ 'id' ];
     h_zone_id.trim();
 
-    dbConnection.query( "SELECT * FROM  dms_h_zone_images JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id) WHERE h_zone_id = ?",
+    dbConnection.query( "SELECT * FROM dms_h_zone_images RIGHT JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) RIGHT JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id) RIGHT JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) RIGHT JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) RIGHT JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) RIGHT JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) RIGHT JOIN dms_provinces ON (dms_provinces.province_id = dms_districts.province_id) WHERE h_zone_id = ?",
         [ h_zone_id ], function ( err, rowsFound, fields ) {
             if ( !err ) {
                 return res.send( {success: true, data: rowsFound} );
