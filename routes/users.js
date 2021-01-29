@@ -236,7 +236,7 @@ router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), up
  *      - name: user_id
  *        in: path
  *        required: true
- *      - name: files
+ *      - name: signature
  *        in: formData
  *        type: file
  *        description: The signature to upload
@@ -265,7 +265,7 @@ router.route('/addLevelsStamp/:user_id').put([CREATE_DIR("levelSignatures"), upl
  *      - name: user_id
  *        in: path
  *        required: true
- *      - name: files
+ *      - name: signature
  *        in: formData
  *        type: file
  *        description: The stamp to upload
