@@ -236,8 +236,9 @@ const updateNationalUsers = ( req, res ) => {
             // res.status(401).send({ error: error.sqlMessage })
             throw error;
         } else {
-            console.log( results );
-            return res.status( 201 ).send( {error: false, data: results, message: 'user has been updated successfully.'} );
+            console.log( "files ",readFiles(req,res) );
+
+            return res.status( 201 ).send( {error: false, data: readFiles(req,res), message: 'user has been updated successfully.'} );
         };
     } )
 }
