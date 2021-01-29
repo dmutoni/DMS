@@ -1,4 +1,4 @@
-const express = require( 'express' )
+const express = require('express')
 const {
     getUsers,
     createUser,
@@ -7,10 +7,10 @@ const {
     getUserById,
     createUSerSignature,
     createLevelSignature,
-    login, updatePassword} = require( '../controllers/users.controller' )
-const {upload} = require( '../functions/insertFile' )
-const {CREATE_DIR} = require( '../middleware/createUploadDirectory' )
-const {protect, authorize} = require( '../middleware/auth' )
+    login, updatePassword } = require('../controllers/users.controller')
+const { upload } = require('../functions/insertFile')
+const { CREATE_DIR } = require('../middleware/createUploadDirectory')
+const { protect, authorize } = require('../middleware/auth')
 // const { route } = require('./UserTypes')
 /**
 * @swagger
@@ -80,7 +80,7 @@ const {protect, authorize} = require( '../middleware/auth' )
 *           type: string
 */
 
-const router = express.Router( {mergeParams: true} )
+const router = express.Router({ mergeParams: true })
 /**
  * @swagger
  * /api/v1/users:
@@ -96,7 +96,7 @@ const router = express.Router( {mergeParams: true} )
  *       500:
  *         description: Internal Server error
  */
-router.route( '/' ).get( getUsers )
+router.route('/').get(getUsers)
 /**
  * @swagger
  * /api/v1/users:
@@ -127,7 +127,7 @@ router.route( '/' ).get( getUsers )
  */
 
 
-router.route( '/getUserId/:id' ).get( getUserById )
+router.route('/getUserId/:id').get(getUserById)
 
 /**
  * @swagger
@@ -157,7 +157,7 @@ router.route( '/getUserId/:id' ).get( getUserById )
  *        description: Internal Server error
  */
 
-router.route( '/' ).post( createUser )
+router.route('/').post(createUser)
 /**
  * @swagger
  * /api/v1/users/{user_id}:
@@ -190,7 +190,7 @@ router.route( '/' ).post( createUser )
  *        description: Internal Server error
  */
 
-router.route( '/:id' ).put( updateUser )
+router.route('/:id').put(updateUser)
 
 /**
  * @swagger
@@ -219,9 +219,9 @@ router.route( '/:id' ).put( updateUser )
  *      500:
  *        description: Internal Server error
  */
-router.route( '/deleteUser/:id' ).put( deleteUser )
+router.route('/deleteUser/:id').put(deleteUser)
 
-router.route( '/addUserSignature/:user_id' ).put( [ CREATE_DIR( "userSignatures" ), upload.single( 'signature' ), createUSerSignature ] )
+router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 
 /**
  * @swagger
@@ -250,7 +250,7 @@ router.route( '/addUserSignature/:user_id' ).put( [ CREATE_DIR( "userSignatures"
  */
 
 
-router.route( '/addLevelsStamp/:user_id' ).put( [ CREATE_DIR( "levelSignatures" ), upload.single( 'signature' ), createLevelSignature ] )
+router.route('/addLevelsStamp/:user_id').put([CREATE_DIR("levelSignatures"), upload.single('signature'), createLevelSignature])
 
 /**
  * @swagger
@@ -278,7 +278,7 @@ router.route( '/addLevelsStamp/:user_id' ).put( [ CREATE_DIR( "levelSignatures" 
  *        description: Internal Server error
  */
 
-router.route( '/login' ).post( login );
+router.route('/login').post(login);
 /**
  * @swagger
  * /api/v1/users/login:
@@ -308,7 +308,7 @@ router.route( '/login' ).post( login );
  *        description: Internal Server error
  */
 
-router.route( '/changePassword/:id' ).put( updatePassword );
+router.route('/changePassword/:id').put(updatePassword);
 
 /**
  * @swagger

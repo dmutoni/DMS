@@ -2,6 +2,7 @@ const fs = require('fs');
 // const {Category} = require('../models/User/UserCategory/user-category.model');
 
 exports.CREATE_DIR = (path) => {
+    console.log(path)
     return async (req, res, next) => {
         try {
             const dir = `uploads/${path}`

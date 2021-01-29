@@ -195,6 +195,7 @@ const readFiles = ( req, res ) => {
 
 module.exports.createUSerSignature = async ( req, res ) => {
     console.log( "something" )
+    console.log(req.body.signatures)
     if ( !req.params ) {
         return res.status( 400 ).send( {success: false, data: "no provided id"} )
     }
@@ -289,30 +290,36 @@ const checkUsers = ( district_id, req, res ) => {
 // this is a function for selecting district id for the user who has logged in 
 
 module.exports.createLevelSignature = async ( req, res ) => {
-    if ( !req.params ) {
-        return res.status( 400 ).send( {success: false, data: "no provided id"} )
+    try {
+        if ( !req.params ) {
+            return res.status( 400 ).send( {success: false, data: "no provided id"} )
+        }
+        let user_id = req.params[ 'user_id' ];
+        user_id.trim();
+        await dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id) WHERE user_id = ?",
+            [ user_id ], function ( err, rowsFound, fields ) {
+                if ( !err ) {
+                    const user_type = rowsFound[ 0 ].user_type;
+                    user_district_id = rowsFound[ 0 ].district_id;
+                    console.log( "district id: ", user_district_id )
+                    if ( user_type === "DISTRICT" ) {
+                        checkUsers( user_district_id, req, res )
+                    } else if ( user_type === "NATIONAL" ) {
+                        console.log( "user type is national" );
+                        updateNationalUsers( req, res )
+                    }
+                    else {
+                        return res.status( 400 ).send( {success: false, message: "bad request"} );
+                    }
+                } else {
+                    return err;
+                }
+            } )
+    }    
+    catch (error) {
+        console.log(error)        
+        return res.status(500).send({success: false, message: error})
     }
-    let user_id = req.params[ 'user_id' ];
-    user_id.trim();
-    await dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id) WHERE user_id = ?",
-        [ user_id ], function ( err, rowsFound, fields ) {
-            if ( !err ) {
-                const user_type = rowsFound[ 0 ].user_type;
-                user_district_id = rowsFound[ 0 ].district_id;
-                console.log( "district id: ", user_district_id )
-                if ( user_type === "DISTRICT" ) {
-                    checkUsers( user_district_id, req, res )
-                } else if ( user_type === "NATIONAL" ) {
-                    console.log( "user type is national" );
-                    updateNationalUsers( req, res )
-                }
-                else {
-                    return res.status( 400 ).send( {success: false, message: "bad request"} );
-                }
-            } else {
-                return err;
-            }
-        } )
 }
 exports.login = async ( req, res ) => {
     // let user_id = req.params['id'];
