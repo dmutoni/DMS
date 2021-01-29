@@ -218,7 +218,7 @@ module.exports.createUSerSignature = async ( req, res ) => {
             throw err;
         } else {
             console.log( results );
-            return res.status( 201 ).send( {error: false, data: results, message: 'user has been updated successfully.'} );
+            return res.status( 201 ).send( {error: false, data: inserts, message: 'user has been updated successfully.'} );
         };
     } )
 }
