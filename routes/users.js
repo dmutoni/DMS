@@ -226,7 +226,7 @@ router.route( '/addUserSignature/:user_id' ).put( [ CREATE_DIR( "userSignatures"
 /**
  * @swagger
  * /api/v1/users/addUserSignature/{user_id}:
- *   post:
+ *   put:
  *    tags:
  *      - users
  *    description: Create a new user signature
@@ -255,7 +255,7 @@ router.route( '/addLevelsStamp/:user_id' ).put( [ CREATE_DIR( "levelSignatures" 
 /**
  * @swagger
  * /api/v1/users/addLevelsStamp/{user_id}:
- *   post:
+ *   put:
  *    tags:
  *      - users
  *    description: Create a new level stamp
