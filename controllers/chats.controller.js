@@ -34,8 +34,7 @@ module.exports.createMessage = asyncHandler( async ( req, res ) => {
     const validation = new Validator( req.body, {
         sender_id: 'required|string',
         receiver_id: 'required|string',
-        content: 'required|string',
-        seen: 'required|boolean'
+        content: 'required|string'
     } );
 
 
@@ -49,10 +48,9 @@ module.exports.createMessage = asyncHandler( async ( req, res ) => {
                 uuidv4(),
                 req.body.sender_id,
                 req.body.receiver_id,
-                req.body.content,
-                req.body.seen
+                req.body.content
             ]
-            let sql = "INSERT INTO dms_chats(message_id, sender_id, receiver_id, content, seen) VALUES (?);";
+            let sql = "INSERT INTO dms_chats(message_id, sender_id, receiver_id, content) VALUES (?);";
             await dbConnection.query( sql, [ inserts ], ( err, results, fields ) => {
                 if ( err ) {
 
