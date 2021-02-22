@@ -12,13 +12,39 @@ const {generateAuthToken} = require( '../utils/tokens/generateToken' )
 
 module.exports.getUsers = asyncHandler( async ( req, res ) => {
     try {
-        await dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)", ( err, rows, fields ) => {
-            if ( !err ) {
-                return res.status( 200 ).send( {success: true, data: rows} );
-            } else {
-                return res.status( 400 ).send( {success: false, data: err} )
-            }
-        } )
+        let user_type = req.params['type'];
+        switch (user_type) {
+           case 'all':
+                 await dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)", ( err, rows, fields ) => {
+                    if ( !err ) {
+                        return res.status( 200 ).send( {success: true, data: rows} );
+                    } else {
+                        return res.status( 400 ).send( {success: false, data: err} )
+                    }
+                } )
+            break;
+            case 'active':
+                await dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id) WHERE user_status='ACTIVE'", ( err, rows, fields ) => {
+                    if ( !err ) {
+                        return res.status( 200 ).send( {success: true, data: rows} );
+                    } else {
+                        return res.status( 400 ).send( {success: false, data: err} )
+                    }
+                } )
+                break;
+            case 'inactive':
+                 await dbConnection.query( "SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id) WHERE user_status='INACTIVE'", ( err, rows, fields ) => {
+                    if ( !err ) {
+                        return res.status( 200 ).send( {success: true, data: rows} );
+                    } else {
+                        return res.status( 400 ).send( {success: false, data: err} )
+                    }
+                } )
+                break;
+           default:
+               break;
+       }
+        console.log("reached");
     } catch ( error ) {
         return res.status( 500 ).send( {error: "internal server error"} )
     }

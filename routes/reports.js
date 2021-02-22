@@ -120,7 +120,7 @@ router.route('/getTotalClosedReports').get(getTotalClosedReports);
  *         description: Internal Server error
  */
 
-router.route('getTotalPendingReports').get(getTotalPendingReports);
+router.route('/getTotalPendingReports').get(getTotalPendingReports);
 
 /**
  * @swagger

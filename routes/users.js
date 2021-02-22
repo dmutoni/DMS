@@ -97,7 +97,7 @@ const router = express.Router({ mergeParams: true })
  *       500:
  *         description: Internal Server error
  */
-router.route('/').get(getUsers)
+router.route('/:type').get(getUsers)
 /**
  * @swagger
  * /api/v1/users:
