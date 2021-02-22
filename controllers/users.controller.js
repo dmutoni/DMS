@@ -144,6 +144,36 @@ module.exports.getTotalUsers = asyncHandler(async(req,res) => {
         return res.status( 500 ).send( {error: "internal server error"} )
     }
 })
+
+module.exports.getUsersBySector = asyncHandler( async (req,res) => {
+    let sector_id=req.params['sector_id'];
+    sector_id.trim();
+
+    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) WHERE dms_sectors.sector_id = ?",
+        [sector_id],function(err,rowsFound,fields) {
+            if(!err) {
+                res.send({status: true,data: rowsFound});
+            } else {
+                res.send({status: false,data: err})
+            }
+        })
+    // console.log(report_id)
+})
+
+module.exports.getUsersByDistrict = asyncHandler( async (req,res) => {
+    let district_id=req.params['district_id'];
+    district_id.trim();
+
+    dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) WHERE dms_districts.district_id = ?",
+        [district_id],function(err,rowsFound,fields) {
+            if(!err) {
+                res.send({status: true,data: rowsFound});
+            } else {
+                res.send({status: false,data: err})
+            }
+        })
+    // console.log(report_id)
+})
 module.exports.updateUser = asyncHandler( async ( req, res ) => {
     let user_id = req.params[ 'id' ];
     console.log( user_id )

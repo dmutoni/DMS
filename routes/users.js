@@ -1,4 +1,6 @@
 const express = require('express')
+const {getUsersByDistrict} = require("../controllers/users.controller");
+const {getUsersBySector} = require("../controllers/users.controller");
 const {getTotalUsers} = require("../controllers/users.controller");
 const {
     getUsers,
@@ -252,6 +254,69 @@ router.route('/deleteUser/:id').put(deleteUser)
  */
 
 router.route('/getTotalUsersValue/all').get(getTotalUsers);
+
+
+/**
+ * @swagger
+ * /api/v1/users/getUsersBySector/{sector_id}:
+ *   get:
+ *    tags:
+ *      - users
+ *    description: get user by sector
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "user_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/users'
+ *    responses:
+ *      201:
+ *        description: success
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
+
+router.route('/getUsersBySector/:sector_id').get(getUsersBySector);
+
+
+/**
+ * @swagger
+ * /api/v1/users/getUsersByDistrict/{district_id}:
+ *   get:
+ *    tags:
+ *      - users
+ *    description: get user by district
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "user_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/users'
+ *    responses:
+ *      201:
+ *        description: success
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
+router.route('/getUsersByDistrict/:district_id').get(getUsersByDistrict);
 
 router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 

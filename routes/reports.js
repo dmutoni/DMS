@@ -49,21 +49,34 @@ const router=express.Router({mergeParams: true})
  *       state:
  *          type: string
  */
-router.route('/').get(getReports);
+router.route('/:type').get(getReports);
+
 /**
  * @swagger
- * /api/v1/reports:
+ * /api/v1/reports/getReports/{type}:
  *   get:
- *     tags:
- *       - reports
- *     description: Get all reports
- *     responses:
- *       200:
- *         description: OK
- *       404:
- *         description: Not found
- *       500:
- *         description: Internal Server error
+ *    tags:
+ *      - users
+ *    description: get reports by type specifiy if -all , -pending , -closed , -declined
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "type"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/reports'
+ *    responses:
+ *      201:
+ *        description: success
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
  */
 
 router.route('/getTotalReports').get(getTotalReports);
