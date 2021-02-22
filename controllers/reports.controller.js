@@ -16,7 +16,58 @@ module.exports.getReports=asyncHandler(async (req,res) => {
         }
     })
 })
-
+module.exports.getTotalReports = asyncHandler(async(req,res) => {
+        try {
+        await dbConnection.query( "SELECT COUNT(*) FROM dms_reports", ( err, rows, fields ) => {
+            if ( !err ) {
+                return res.status( 200 ).send( {success: true, data: rows} );
+            } else {
+                return res.status( 400 ).send( {success: false, data: err} )
+            }
+        } )
+    } catch ( error ) {
+        return res.status( 500 ).send( {error: "internal server error"} )
+    }
+})
+module.exports.getTotalDeclinedReports = asyncHandler(async(req,res) => {
+            try {
+        await dbConnection.query( "SELECT COUNT(*) FROM dms_reports WHERE status = 'DECLINED'", ( err, rows, fields ) => {
+            if ( !err ) {
+                return res.status( 200 ).send( {success: true, data: rows} );
+            } else {
+                return res.status( 400 ).send( {success: false, data: err} )
+            }
+        } )
+    } catch ( error ) {
+        return res.status( 500 ).send( {error: "internal server error"} )
+    }
+})
+module.exports.getTotalPendingReports = asyncHandler(async(req,res) => {
+            try {
+        await dbConnection.query( "SELECT COUNT(*) FROM dms_reports WHERE status = 'PENDING'", ( err, rows, fields ) => {
+            if ( !err ) {
+                return res.status( 200 ).send( {success: true, data: rows} );
+            } else {
+                return res.status( 400 ).send( {success: false, data: err} )
+            }
+        } )
+    } catch ( error ) {
+        return res.status( 500 ).send( {error: "internal server error"} )
+    }
+})
+module.exports.getTotalClosedReports = asyncHandler(async(req,res) => {
+            try {
+        await dbConnection.query( "SELECT COUNT(*) FROM dms_reports WHERE status = 'CLOSED'", ( err, rows, fields ) => {
+            if ( !err ) {
+                return res.status( 200 ).send( {success: true, data: rows} );
+            } else {
+                return res.status( 400 ).send( {success: false, data: err} )
+            }
+        } )
+    } catch ( error ) {
+        return res.status( 500 ).send( {error: "internal server error"} )
+    }
+})
 // function checkLevelId(level_id, callBack) {
 //     dbConnection.query("SELECT * FROM dms_levels WHERE level_id = ?", [level_id], function(err, rows, fields) {
 //         if (rows.length > 0)

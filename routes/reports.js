@@ -1,4 +1,8 @@
 const express=require('express')
+const {getTotalPendingReports} = require("../controllers/reports.controller");
+const {getTotalClosedReports} = require("../controllers/reports.controller");
+const {getTotalDeclinedReports} = require("../controllers/reports.controller");
+const {getTotalReports} = require("../controllers/reports.controller");
 const {
     getReports,
     createReport,
@@ -12,7 +16,7 @@ const {
     pushReportToNationalLevel}=require('../controllers/reports.controller')
 // const { route } = require('./ReportTypes')
 
-const {protect,authorize}=require('../middleware/auth')
+const {protect,authorize} = require('../middleware/auth')
 
 
 const router=express.Router({mergeParams: true})
@@ -45,7 +49,7 @@ const router=express.Router({mergeParams: true})
  *       state:
  *          type: string
  */
-
+router.route('/').get(getReports);
 /**
  * @swagger
  * /api/v1/reports:
@@ -62,7 +66,79 @@ const router=express.Router({mergeParams: true})
  *         description: Internal Server error
  */
 
-router.route('/').get(getReports)
+router.route('/getTotalReports').get(getTotalReports);
+
+/**
+ * @swagger
+ * /api/v1/reports/getTotalReports:
+ *   get:
+ *     tags:
+ *       - reports
+ *     description: Get total number reports
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server error
+ */
+
+router.route('/getTotalDeclinedReports').get(getTotalDeclinedReports);
+
+/**
+ * @swagger
+ * /api/v1/reports/getTotalDeclinedReports:
+ *   get:
+ *     tags:
+ *       - reports
+ *     description: Get all declined reports
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server error
+ */
+
+router.route('/getTotalClosedReports').get(getTotalClosedReports);
+
+/**
+ * @swagger
+ * /api/v1/reports/getTotalClosedReports:
+ *   get:
+ *     tags:
+ *       - reports
+ *     description: Get all closed reports
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server error
+ */
+
+router.route('getTotalPendingReports').get(getTotalPendingReports);
+
+/**
+ * @swagger
+ * /api/v1/reports/getTotalPendingReports:
+ *   get:
+ *     tags:
+ *       - reports
+ *     description: Get all pending reports
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server error
+ */
+
+
 /**
  * @swagger
  * /api/v1/reports:
@@ -124,6 +200,7 @@ router.route('/').post(createReport)
  *      500:
  *        description: Internal Server error
  */
+
 router.route('/:id').put(updateReport)
 /**
  * @swagger

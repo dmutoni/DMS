@@ -104,6 +104,19 @@ module.exports.createUser = asyncHandler( async ( req, res ) => {
 
     } )
 } )
+module.exports.getTotalUsers = asyncHandler(async(req,res) => {
+        try {
+        await dbConnection.query( "SELECT COUNT(*) FROM dms_users", ( err, rows, fields ) => {
+            if ( !err ) {
+                return res.status( 200 ).send( {success: true, data: rows} );
+            } else {
+                return res.status( 400 ).send( {success: false, data: err} )
+            }
+        } )
+    } catch ( error ) {
+        return res.status( 500 ).send( {error: "internal server error"} )
+    }
+})
 module.exports.updateUser = asyncHandler( async ( req, res ) => {
     let user_id = req.params[ 'id' ];
     console.log( user_id )

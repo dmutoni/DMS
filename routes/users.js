@@ -1,4 +1,5 @@
 const express = require('express')
+const {getTotalUsers} = require("../controllers/users.controller");
 const {
     getUsers,
     createUser,
@@ -220,6 +221,24 @@ router.route('/:id').put(updateUser)
  *        description: Internal Server error
  */
 router.route('/deleteUser/:id').put(deleteUser)
+
+/**
+ * @swagger
+ * /api/v1/users/getTotalUsers:
+ *   get:
+ *     tags:
+ *       - users
+ *     description: Get all total users
+ *     responses:
+ *       200:
+ *         description: OK
+ *       404:
+ *         description: Not found
+ *       500:
+ *         description: Internal Server error
+ */
+
+router.route('/getTotalUsers').get(getTotalUsers);
 
 router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 
