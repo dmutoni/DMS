@@ -82,20 +82,33 @@ const { protect, authorize } = require('../middleware/auth')
 */
 
 const router = express.Router({ mergeParams: true })
+
 /**
  * @swagger
- * /api/v1/users:
+ * /api/v1/users/getUsers/{type}:
  *   get:
- *     tags:
- *       - users
- *     description: Get all users
- *     responses:
- *       200:
- *         description: OK
- *       404:
- *         description: Not found
- *       500:
- *         description: Internal Server error
+ *    tags:
+ *      - users
+ *    description: get user by type specifiy if -all , -inactive , active
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "type"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/users'
+ *    responses:
+ *      201:
+ *        description: success
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
  */
 router.route('/:type').get(getUsers)
 /**
