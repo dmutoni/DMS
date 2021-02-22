@@ -237,7 +237,7 @@ router.route('/deleteUser/:id').put(deleteUser)
 
 /**
  * @swagger
- * /api/v1/users/getTotalUsers:
+ * /api/v1/users/getTotalUsersValue:
  *   get:
  *     tags:
  *       - users
@@ -251,7 +251,7 @@ router.route('/deleteUser/:id').put(deleteUser)
  *         description: Internal Server error
  */
 
-router.route('/getTotalUsers').get(getTotalUsers);
+router.route('/getTotalUsersValue/all').get(getTotalUsers);
 
 router.route('/addUserSignature/:user_id').put([CREATE_DIR("userSignatures"), upload.single('signature'), createUSerSignature])
 

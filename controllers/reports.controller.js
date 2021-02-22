@@ -30,7 +30,7 @@ module.exports.getTotalReports = asyncHandler(async(req,res) => {
     }
 })
 module.exports.getTotalDeclinedReports = asyncHandler(async(req,res) => {
-            try {
+    try {
         await dbConnection.query( "SELECT COUNT(*) AS totalDeclinedReports FROM dms_reports WHERE status = 'DECLINED'", ( err, rows, fields ) => {
             if ( !err ) {
                 return res.status( 200 ).send( {success: true, data: rows} );
@@ -56,7 +56,7 @@ module.exports.getTotalPendingReports = asyncHandler(async(req,res) => {
     }
 })
 module.exports.getTotalClosedReports = asyncHandler(async(req,res) => {
-            try {
+    try {
         await dbConnection.query( "SELECT COUNT(*) AS totalClosedReports FROM dms_reports WHERE status = 'CLOSED'", ( err, rows, fields ) => {
             if ( !err ) {
                 return res.status( 200 ).send( {success: true, data: rows} );

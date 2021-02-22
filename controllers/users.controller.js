@@ -44,7 +44,6 @@ module.exports.getUsers = asyncHandler( async ( req, res ) => {
            default:
                break;
        }
-        console.log("reached");
     } catch ( error ) {
         return res.status( 500 ).send( {error: "internal server error"} )
     }
@@ -131,16 +130,17 @@ module.exports.createUser = asyncHandler( async ( req, res ) => {
     } )
 } )
 module.exports.getTotalUsers = asyncHandler(async(req,res) => {
-        try {
+    console.log("reached");
+    try {
         await dbConnection.query( "SELECT COUNT(*) AS totalUsers FROM dms_users", ( err, rows, fields ) => {
             if ( !err ) {
-                console.log(rows[0]);
-                return res.status( 200 ).send( {success: true, data: rows});
+                return res.status( 200 ).send( {success: true, data: rows} );
             } else {
                 return res.status( 400 ).send( {success: false, data: err} )
             }
         } )
     } catch ( error ) {
+        console.log(error);
         return res.status( 500 ).send( {error: "internal server error"} )
     }
 })
