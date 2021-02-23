@@ -133,11 +133,11 @@ router.route('/getTotalClosedReports').get(getTotalClosedReports);
  *         description: Internal Server error
  */
 
-router.route('/getTotalPendingReports').get(getTotalPendingReports);
+router.route('/getTotalPendingReports/pending').get(getTotalPendingReports);
 
 /**
  * @swagger
- * /api/v1/reports/getTotalPendingReports:
+ * /api/v1/reports/getTotalPendingReports/pending:
  *   get:
  *     tags:
  *       - reports
