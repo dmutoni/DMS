@@ -523,7 +523,7 @@ Router.get('/getCellsBySectors/:sector_id', (req, res) => {
 *         description: Internal Server error
 */
 Router.get('/getVillages', (req, res) => {
-    dbConnection.query("SELECT * FROM dms_villages LIMIT 10", (err, rows, fields) => {
+    dbConnection.query("SELECT * FROM dms_villages", (err, rows, fields) => {
         try {
             if (!err) {
 
