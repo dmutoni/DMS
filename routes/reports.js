@@ -79,11 +79,11 @@ router.route('/:type').get(getReports);
  *        description: Internal Server error
  */
 
-router.route('/getTotalReports').get(getTotalReports);
+router.route('/getTotalReports/all').get(getTotalReports);
 
 /**
  * @swagger
- * /api/v1/reports/getTotalReports:
+ * /api/v1/reports/getTotalReports/all:
  *   get:
  *     tags:
  *       - reports
@@ -97,11 +97,11 @@ router.route('/getTotalReports').get(getTotalReports);
  *         description: Internal Server error
  */
 
-router.route('/getTotalDeclinedReports').get(getTotalDeclinedReports);
+router.route('/getTotalDeclinedReports/all').get(getTotalDeclinedReports);
 
 /**
  * @swagger
- * /api/v1/reports/getTotalDeclinedReports:
+ * /api/v1/reports/getTotalDeclinedReports/all:
  *   get:
  *     tags:
  *       - reports
@@ -115,11 +115,11 @@ router.route('/getTotalDeclinedReports').get(getTotalDeclinedReports);
  *         description: Internal Server error
  */
 
-router.route('/getTotalClosedReports').get(getTotalClosedReports);
+router.route('/getTotalClosedReports/all').get(getTotalClosedReports);
 
 /**
  * @swagger
- * /api/v1/reports/getTotalClosedReports:
+ * /api/v1/reports/getTotalClosedReports/all:
  *   get:
  *     tags:
  *       - reports
