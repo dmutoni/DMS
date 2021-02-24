@@ -49,7 +49,6 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
         first_name: 'required',
         last_name: 'required',
         gender: 'required',
-        age: 'required|integer|minLength:1',
         marital_status: 'required',
         family_members: 'required|integer',
         primary_phone_number: 'required|integer|minLength:12|maxLength:12',
@@ -66,9 +65,7 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
         if (!matched) {
             res.status(422).send({success: false,data: validation.errors});
         } else if (matched) {
-            victim_pin = req.body.village_id 
-
-           victim_pin = req.body.village_id 
+         let victim_pin = req.body.village_id
 
             let inserts = [
                 uuidv4(),
@@ -76,7 +73,6 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
                 req.body.first_name,
                 req.body.last_name,
                 req.body.gender,
-                req.body.age,
                 req.body.marital_status,
                 req.body.family_members,
                 req.body.primary_phone_number,
@@ -88,7 +84,7 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
                 req.body.village_id
             ]
             console.log("reaching");
-            let sql = "INSERT INTO dms_victims(victim_id,victim_pin, first_name, last_name, gender, age, marital_status,family_members, primary_phone_number, secondary_phone_number, national_id, is_employed, ikiciro_ubudehe, isibo, village_id) VALUES (?);";
+            let sql = "INSERT INTO dms_victims(victim_id,victim_pin, first_name, last_name, gender, marital_status,family_members, primary_phone_number, secondary_phone_number, national_id, is_employed, ikiciro_ubudehe, isibo, village_id) VALUES (?);";
           await  dbConnection.query(sql, [inserts], (err, results, fields) => {
                 if (err) {
                     res.status(401).send({ error: err.sqlMessage })
@@ -112,7 +108,6 @@ module.exports.updateVictim = asyncHandler(async (req, res) => {
         first_name: 'required',
         last_name: 'required',
         gender: 'required',
-        age: 'required|integer|minLength:1',
         marital_status: 'required',
         family_members: 'required|integer',
         primary_phone_number: 'required|integer|minLength:12|maxLength:12',
@@ -133,7 +128,6 @@ module.exports.updateVictim = asyncHandler(async (req, res) => {
                 first_name: req.body.first_name,
                 last_name: req.body.last_name,
                 gender: req.body.gender,
-                age: req.body.age,
                 marital_status: req.body.marital_status,
                 family_members: req.body.family_members,
                 primary_phone_number: req.body.primary_phone_number,
