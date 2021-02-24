@@ -9,7 +9,7 @@ const asyncHandler = require( '../middleware/async' );
 
 module.exports.get_h_zones = asyncHandler( async ( req, res ) => {
     // SELECT * FROM dms_h_zone_images RIGHT JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) RIGHT JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id) RIGHT JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) RIGHT JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) RIGHT JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) RIGHT JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) RIGHT JOIN dms_provinces ON (dms_provinces.province_id = dms_districts.province_id)
-    await dbConnection.query( "SELECT * FROM dms_high_risk_zones", ( err, rows, fields ) => {
+    await dbConnection.query( "SELECT * FROM dms_high_risk_zones JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) JOIN dms_provinces ON (dms_provinces.province_id = dms_districts.province_id)", ( err, rows, fields ) => {
         if ( !err ) {
             res.send( rows );
         } else {
