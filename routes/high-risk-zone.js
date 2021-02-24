@@ -1,4 +1,5 @@
 const express = require( 'express' )
+const {getHzoneByDistrictId} = require("../controllers/high-risk-zone.controller");
 const {
     get_h_zones,
     create_h_zone,
@@ -180,6 +181,10 @@ router.route( '/:id' ).put( update_h_zone )
  */
 
 router.route( '/:id' ).delete( delete_h_zone )
+
+router.route( '/getHzoneByDistrictId/:district_id').get(getHzoneByDistrictId);
+
+router.route('/getHzoneByVillageId/:village_id').get(getHzoneByVillageId);
 
 router.route( '/getHighRiskZoneById/:id' ).get( get_h_zoneById )
 

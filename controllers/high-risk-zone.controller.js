@@ -11,13 +11,25 @@ module.exports.get_h_zones = asyncHandler( async ( req, res ) => {
     // SELECT * FROM dms_h_zone_images RIGHT JOIN dms_images ON (dms_images.dms_images_id = dms_h_zone_images.dms_h_zone_image_id) RIGHT JOIN dms_high_risk_zones ON (dms_high_risk_zones.h_zone_id = dms_h_zone_images.dms_h_zone_id) RIGHT JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) RIGHT JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) RIGHT JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) RIGHT JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) RIGHT JOIN dms_provinces ON (dms_provinces.province_id = dms_districts.province_id)
     await dbConnection.query( "SELECT * FROM dms_high_risk_zones JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) JOIN dms_provinces ON (dms_provinces.province_id = dms_districts.province_id)", ( err, rows, fields ) => {
         if ( !err ) {
-            res.send( rows );
+            res.status(200).send( rows );
         } else {
-            console.log( err );
+            res.status(404).send( err );
         }
     } )
 } )
+module.exports.getHzoneByDistrictId = asyncHandler(async ( req, res)=>{
+    let district_id = req.params['district_id'];
+    await dbConnection.query("SELECT * FROM dms_high_risk_zones JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id)JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) WHERE dms_districts.district_id = district_id?",[district_id],(err, rows, fields) => {
+        if (!err)  {
+            res.status(200).send(rows);
+        } else{
+            res.status(400).send(rows);
+        }
+    })
+})
+module.exports.getHzoneByVillageId = asyncHandler(async(req,res)=>{
 
+})
 module.exports.get_h_zoneById = asyncHandler( async ( req, res ) => {
     let h_zone_id = req.params[ 'id' ];
     h_zone_id.trim();
