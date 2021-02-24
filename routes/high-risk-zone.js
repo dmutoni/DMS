@@ -183,15 +183,102 @@ router.route( '/:id' ).put( update_h_zone )
 
 router.route( '/:id' ).delete( delete_h_zone )
 
-router.route( '/getHzoneByDistrictId/:district_id').get(getHzoneByDistrictId);
 
+/**
+ * @swagger
+ * /api/v1/h_zones/{h_zone_id}:
+ *   put:
+ *    tags:
+ *      - h_zone
+ *    description: Update a h_zone
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: h_zone_id
+ *        in: path
+ *        required: true
+ *      - name: body
+ *        description: Fields for a h_zone
+ *        in: body
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/h_zone_image'
+ *    responses:
+ *      201:
+ *        description: updated
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
+router.route( '/getHzoneByDistrictId/:district_id').get(getHzoneByDistrictId);
+/**
+ * @swagger
+ * /api/v1/h_zones/getHzoneByDistrictId/{district_id}:
+ *   get:
+ *    tags:
+ *      - h_zone
+ *    description: get a high risk zone by district id
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "district_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/h_zone'
+ *    responses:
+ *      201:
+ *        description: success
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
 router.route('/getHzoneByVillageId/:village_id').get(getHzoneByVillageId);
+
+/**
+ * @swagger
+ * /api/v1/h_zones/getHzoneByVillageId/{village_id}:
+ *   get:
+ *    tags:
+ *      - h_zone
+ *    description: get a high risk zone by village id
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "village_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/h_zone'
+ *    responses:
+ *      201:
+ *        description: success
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
 
 router.route( '/getHighRiskZoneById/:id' ).get( get_h_zoneById )
 
 /**
  * @swagger
- * /api/v1/h_zone/getHighRiskZoneById/{h_zone_id}:
+ * /api/v1/h_zones/getHighRiskZoneById/{h_zone_id}:
  *   get:
  *    tags:
  *      - h_zone

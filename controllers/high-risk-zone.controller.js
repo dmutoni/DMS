@@ -19,16 +19,23 @@ module.exports.get_h_zones = asyncHandler( async ( req, res ) => {
 } )
 module.exports.getHzoneByDistrictId = asyncHandler(async ( req, res)=>{
     let district_id = req.params['district_id'];
-    await dbConnection.query("SELECT * FROM dms_high_risk_zones JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id)JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) WHERE dms_districts.district_id = district_id?",[district_id],(err, rows, fields) => {
+    await dbConnection.query("SELECT * FROM dms_high_risk_zones JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id)JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id) WHERE dms_districts.district_id = ?",[district_id],(err, rows, fields) => {
         if (!err)  {
             res.status(200).send(rows);
         } else{
-            res.status(400).send(rows);
+            res.status(400).send({message: rows});
         }
     })
 })
 module.exports.getHzoneByVillageId = asyncHandler(async(req,res)=>{
-
+   let village_id = req.params['village_id'];
+    await dbConnection.query("SELECT * FROM dms_high_risk_zones JOIN dms_villages ON (dms_villages.village_id = dms_high_risk_zones.village_id) WHERE dms_villages.village_id = ?",[village_id],(err, rows, fields) => {
+        if (!err)  {
+            res.status(200).send(rows);
+        } else{
+            res.status(400).send({message: rows});
+        }
+    })
 })
 module.exports.get_h_zoneById = asyncHandler( async ( req, res ) => {
     let h_zone_id = req.params[ 'id' ];
