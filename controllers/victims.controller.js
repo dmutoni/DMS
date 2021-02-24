@@ -90,9 +90,24 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
                     res.status(401).send({ error: err.sqlMessage })
                         // throw err;
                 } else {
-                    console.log(results)
+                    let returnValues = {
+                        victim_id : inserts[0],
+                        victim_pin: inserts[1],
+                        first_name: inserts[2],
+                        last_name: inserts[3],
+                        gender: inserts[4],
+                        marital_status: inserts[5],
+                        family_members: inserts[6],
+                        primary_phone_number: inserts[7],
+                        secondary_phone_number: inserts[8],
+                        national_id: inserts[9],
+                        is_employed: inserts[10],
+                        ikiciro_ubudehe: inserts[11],
+                        isibo: inserts[12],
+                        village_id: inserts[13]
+                    }
                         // results.send("row inserted");
-                    return res.status(201).json({ success:true , data: results, message: 'New user has been created successfully.' });
+                    return res.status(201).json({ success:true , data: returnValues, message: 'New user has been created successfully.' });
                     // console.log("Row inserted: "+ results.affectedRows);
                 }
             });
