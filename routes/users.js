@@ -10,80 +10,83 @@ const {
     getUserById,
     createUSerSignature,
     createLevelSignature,
-    login, updatePassword } = require('../controllers/users.controller')
-const { upload } = require('../functions/insertFile')
-const { CREATE_DIR } = require('../middleware/createUploadDirectory')
-const { protect, authorize } = require('../middleware/auth')
+    login, updatePassword,
+    getTotalUsersByDistrictID,
+    getTotalUsersBySectorID
+} = require('../controllers/users.controller')
+const {upload} = require('../functions/insertFile')
+const {CREATE_DIR} = require('../middleware/createUploadDirectory')
+const {protect, authorize} = require('../middleware/auth')
 // const { route } = require('./UserTypes')
 /**
-* @swagger
-* definitions:
-*   users:
-*     required:          
-*       - first_name
-*       - gender
-*       - age
-*       - job_title
-*       - last_name
-*       - password
-*       - phone_number
-*       - national_id
-*       - user_type
-*       - user_status
-*     properties:
-*       first_name:
-*         type: string
-*       last_name:
-*         type: string
-*       gender:
-*         type: string
-*         enum: [FEMALE,MALE]
-*       age:
-*         type: number
-*       email:
-*         type: string
-*       phone_number:
-*          type: string
-*       national_id:
-*          type: number
-*       password:
-*          type: string
-*       job_title:
-*          type: string
-*       sector_id:
-*          type: string
-*       user_type:
-*          type: string
-*          enum: ['DISTRICT', 'SECTOR', 'NATIONAL']
-*       user_status:
-*          type: string 
-*          enum: ['ACTIVE', 'INACTIVE']
-*/
+ * @swagger
+ * definitions:
+ *   users:
+ *     required:
+ *       - first_name
+ *       - gender
+ *       - age
+ *       - job_title
+ *       - last_name
+ *       - password
+ *       - phone_number
+ *       - national_id
+ *       - user_type
+ *       - user_status
+ *     properties:
+ *       first_name:
+ *         type: string
+ *       last_name:
+ *         type: string
+ *       gender:
+ *         type: string
+ *         enum: [FEMALE,MALE]
+ *       age:
+ *         type: number
+ *       email:
+ *         type: string
+ *       phone_number:
+ *          type: string
+ *       national_id:
+ *          type: number
+ *       password:
+ *          type: string
+ *       job_title:
+ *          type: string
+ *       sector_id:
+ *          type: string
+ *       user_type:
+ *          type: string
+ *          enum: ['DISTRICT', 'SECTOR', 'NATIONAL']
+ *       user_status:
+ *          type: string
+ *          enum: ['ACTIVE', 'INACTIVE']
+ */
 
 /**
-* @swagger
-* components:
-*   schemas:
-*     login:
-*       properties:
-*         email:
-*           type: string
-*         password:
-*           type: string
-*/
+ * @swagger
+ * components:
+ *   schemas:
+ *     login:
+ *       properties:
+ *         email:
+ *           type: string
+ *         password:
+ *           type: string
+ */
 /**
-* @swagger
-* components:
-*   schemas:
-*     UPDATE_PASSWORD:
-*       properties:
-*         current_password:
-*           type: string
-*         new_password:
-*           type: string
-*/
+ * @swagger
+ * components:
+ *   schemas:
+ *     UPDATE_PASSWORD:
+ *       properties:
+ *         current_password:
+ *           type: string
+ *         new_password:
+ *           type: string
+ */
 
-const router = express.Router({ mergeParams: true })
+const router = express.Router({mergeParams: true})
 
 /**
  * @swagger
@@ -151,7 +154,7 @@ router.route('/getUserId/:id').get(getUserById)
  *   get:
  *    tags:
  *      - users
- *    description: get user by id 
+ *    description: get user by id
  *    consumes:
  *      - "application/json"
  *      - "application/xml"
@@ -160,6 +163,67 @@ router.route('/getUserId/:id').get(getUserById)
  *      - "application/json"
  *    parameters:
  *      - name: "user_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/users'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
+router.route('/getTotalUsersByDistrictID/:district_id').get(getTotalUsersByDistrictID)
+
+
+/**
+ * @swagger
+ * /api/v1/users/getTotalUsersByDistrictID/{district_id}:
+ *   get:
+ *    tags:
+ *      - users
+ *    description: get total users by district id
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "district_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/components/users'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
+router.route('/getTotalUsersBySectorID/:sector_id').get(getTotalUsersBySectorID)
+
+/**
+ * @swagger
+ * /api/v1/users/getTotalUsersBySectorID/{sector_id}:
+ *   get:
+ *    tags:
+ *      - users
+ *    description: get total users by sector id
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "sector_id"
  *        in: path
  *        required: true
  *        schema:

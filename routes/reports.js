@@ -1,8 +1,12 @@
 const express=require('express')
+const {getTotalReportsByDistrictID} = require("../controllers/reports.controller");
 const {getTotalPendingReports} = require("../controllers/reports.controller");
 const {getTotalClosedReports} = require("../controllers/reports.controller");
 const {getTotalDeclinedReports} = require("../controllers/reports.controller");
 const {getTotalReports} = require("../controllers/reports.controller");
+const {getTotalPendingReportsByDistrictID} = require("../controllers/reports.controller");
+const {getTotalFundedReportsByDistrictID} = require("../controllers/reports.controller");
+const {getTotalRejectedReportsByDistrictID} = require("../controllers/reports.controller");
 const {
     getReports,
     createReport,
@@ -150,7 +154,10 @@ router.route('/getTotalPendingReports/pending').get(getTotalPendingReports);
  *       500:
  *         description: Internal Server error
  */
-
+router.route('/getTotalReportsByDistrictID/all/:district_id').get(getTotalReportsByDistrictID);
+router.route('/getTotalFundedReportsByDistrictID/all').get(getTotalFundedReportsByDistrictID);
+router.route('/getTotalPendingReportsByDistrictID/all').get(getTotalPendingReportsByDistrictID);
+router.route('/getTotalRejectedReportsByDistrictID/all').get(getTotalRejectedReportsByDistrictID);
 
 /**
  * @swagger

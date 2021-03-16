@@ -1,10 +1,10 @@
 const app = require('express');
 const asyncHandler = require('../middleware/async');
-const { v4: uuidv4 } = require('uuid');
+const {v4: uuidv4} = require('uuid');
 
 const Router = app.Router();
 const dbConnection = require('../config/db.config');
-const { Validator } = require('node-input-validator');
+const {Validator} = require('node-input-validator');
 // let  payloadChecker = require('payload-validator');
 
 // Router.get("/getAllVictims", (req, res) => {
@@ -17,32 +17,32 @@ const { Validator } = require('node-input-validator');
 //     })
 // })
 
-module.exports.getVictims = asyncHandler(async (req,res) => {
-   await dbConnection.query("SELECT * FROM dms_victims", (err, rows, fields) => {
+module.exports.getVictims = asyncHandler(async (req, res) => {
+    await dbConnection.query("SELECT * FROM dms_victims", (err, rows, fields) => {
         if (!err) {
-            res.status(200).json({ success: true, data: rows });
+            res.status(200).json({success: true, data: rows});
         } else {
             console.log(err);
         }
     })
 })
 
-module.exports.getVictimById = asyncHandler(async(req,res) => {
+module.exports.getVictimById = asyncHandler(async (req, res) => {
     let victim_id = req.params['id'];
     victim_id.trim();
-    
-   dbConnection.query("SELECT * FROM dms_victims WHERE victim_id = ?",
-    [victim_id],function (err, rowsFound, fields) {
-        if (!err) {
-          return res.send({success: true, data: rowsFound});
-        } else {
-           return res.send({success: false, data: err})
-        }
-    })
+
+    dbConnection.query("SELECT * FROM dms_victims WHERE victim_id = ?",
+        [victim_id], function (err, rowsFound, fields) {
+            if (!err) {
+                return res.send({success: true, data: rowsFound});
+            } else {
+                return res.send({success: false, data: err})
+            }
+        })
 })
 
 // const generateId = () => uuidv4() 
-module.exports.createVictim = asyncHandler(async(req, res) => {
+module.exports.createVictim = asyncHandler(async (req, res) => {
 
     const validation = new Validator(req.body, {
         // victim_pin: 'required',
@@ -60,12 +60,11 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
     });
 
 
-
-    validation.check().then(async(matched) => {
+    validation.check().then(async (matched) => {
         if (!matched) {
-            res.status(422).send({success: false,data: validation.errors});
+            res.status(422).send({success: false, data: validation.errors});
         } else if (matched) {
-         let victim_pin = req.body.village_id
+            let victim_pin = req.body.village_id
 
             let inserts = [
                 uuidv4(),
@@ -85,13 +84,13 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
             ]
             console.log("reaching");
             let sql = "INSERT INTO dms_victims(victim_id,victim_pin, first_name, last_name, gender, marital_status,family_members, primary_phone_number, secondary_phone_number, national_id, is_employed, ikiciro_ubudehe, isibo, village_id) VALUES (?);";
-          await  dbConnection.query(sql, [inserts], (err, results, fields) => {
+            await dbConnection.query(sql, [inserts], (err, results, fields) => {
                 if (err) {
-                    res.status(401).send({ error: err.sqlMessage })
-                        // throw err;
+                    res.status(401).send({error: err.sqlMessage})
+                    // throw err;
                 } else {
                     let returnValues = {
-                        victim_id : inserts[0],
+                        victim_id: inserts[0],
                         victim_pin: inserts[1],
                         first_name: inserts[2],
                         last_name: inserts[3],
@@ -106,8 +105,12 @@ module.exports.createVictim = asyncHandler(async(req, res) => {
                         isibo: inserts[12],
                         village_id: inserts[13]
                     }
-                        // results.send("row inserted");
-                    return res.status(201).json({ success:true , data: returnValues, message: 'New user has been created successfully.' });
+                    // results.send("row inserted");
+                    return res.status(201).json({
+                        success: true,
+                        data: returnValues,
+                        message: 'New user has been created successfully.'
+                    });
                     // console.log("Row inserted: "+ results.affectedRows);
                 }
             });
@@ -156,11 +159,11 @@ module.exports.updateVictim = asyncHandler(async (req, res) => {
 
             console.log(inserts);
             if (!victim_id || !inserts) {
-                return res.status(400).send({ error: victim, message: 'Please provide victim and victim id' });
+                return res.status(400).send({error: victim, message: 'Please provide victim and victim id'});
             }
-           await dbConnection.query("UPDATE dms_victims SET ?  WHERE victim_id = ?", [inserts, victim_id], function(error, results, fields) {
+            await dbConnection.query("UPDATE dms_victims SET ?  WHERE victim_id = ?", [inserts, victim_id], function (error, results, fields) {
                 if (error) throw error;
-                return res.send({ error: false, data: results, message: 'victim has been updated successfully.' });
+                return res.send({error: false, data: results, message: 'victim has been updated successfully.'});
             })
         }
     });
@@ -169,11 +172,11 @@ module.exports.deleteVictim = asyncHandler(async (req, res) => {
     let victim_id = req.params['id'];
     victim_id.trim();
     if (!victim_id) {
-        return res.status(400).send({ error: true, message: 'Please provide a user id' });
+        return res.status(400).send({error: true, message: 'Please provide a user id'});
     }
-    await dbConnection.query('DELETE FROM dms_victims WHERE victim_id = ?', [victim_id], function(error, results, fields) {
+    await dbConnection.query('DELETE FROM dms_victims WHERE victim_id = ?', [victim_id], function (error, results, fields) {
         if (error) throw error;
-        return res.send({ error: false, data: results, message: 'victim has been delete successfully.' });
+        return res.send({error: false, data: results, message: 'victim has been delete successfully.'});
     });
 })
 
