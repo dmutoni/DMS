@@ -171,6 +171,23 @@ module.exports.getTotalRejectedReportsByDistrictID = asyncHandler(async (req, re
         }
     }
 )
+
+module.exports.getTotalReportsBySectorID = asyncHandler(async (req, res) => {
+    let sector_id = req.params['sector_id'];
+    sector_id.trim();
+        try {
+            await dbConnection.query("SELECT COUNT(*) AS totalReportsBySectorId FROM dms_reports JOIN dms_victims ON (dms_reports.victim_id = dms_victims.victim_id) JOIN dms_villages ON (dms_villages.village_id = dms_victims.village_id) JOIN dms_cells ON (dms_cells.cell_id = dms_villages.cell_id) JOIN dms_sectors ON (dms_sectors.sector_id = dms_cells.sector_id) WHERE dms_sectors.sector_id = ?",[sector_id], (err, rows, fields) => {
+                if (!err) {
+                    return res.status(200).send({success: true, data: rows});
+                } else {
+                    return res.status(400).send({success: false, data: err})
+                }
+            })
+        } catch (error) {
+            return res.status(500).send({error: "internal server error"})
+        }
+    }
+)
 // function checkLevelId(level_id, callBack) {
 //     dbConnection.query("SELECT * FROM dms_levels WHERE level_id = ?", [level_id], function(err, rows, fields) {
 //         if (rows.length > 0)

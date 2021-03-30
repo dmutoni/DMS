@@ -1,4 +1,5 @@
 const express=require('express')
+const {getTotalReportsBySectorID} = require("../controllers/reports.controller");
 const {getTotalReportsByDistrictID} = require("../controllers/reports.controller");
 const {getTotalPendingReports} = require("../controllers/reports.controller");
 const {getTotalClosedReports} = require("../controllers/reports.controller");
@@ -186,10 +187,10 @@ router.route('/getTotalReportsByDistrictID/all/:district_id').get(getTotalReport
 
 router.route('/getTotalFundedReportsByDistrictID/all').get(getTotalFundedReportsByDistrictID);
 
-router.route('/getTotalFundedReportsBySectorID/all/:sector_id').get(getTotalFundedReportsByDistrictID);
+router.route('/getTotalReportsBySectorID/all/:sector_id').get(getTotalReportsBySectorID);
 /**
  * @swagger
- * /api/v1/reports/getTotalFundedReportsBySectorID/all/{sector_id}:
+ * /api/v1/reports/getTotalReportsBySectorID/all/{sector_id}:
  *   get:
  *    tags:
  *      - reports
