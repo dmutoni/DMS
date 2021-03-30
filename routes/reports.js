@@ -155,7 +155,66 @@ router.route('/getTotalPendingReports/pending').get(getTotalPendingReports);
  *         description: Internal Server error
  */
 router.route('/getTotalReportsByDistrictID/all/:district_id').get(getTotalReportsByDistrictID);
+
+/**
+ * @swagger
+ * /api/v1/reports/getTotalReportsByDistrictID/all/{district_id}:
+ *   get:
+ *    tags:
+ *      - reports
+ *    description: get total reports by district id
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "district_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/reports'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 router.route('/getTotalFundedReportsByDistrictID/all').get(getTotalFundedReportsByDistrictID);
+
+router.route('/getTotalFundedReportsBySectorID/all/:sector_id').get(getTotalFundedReportsByDistrictID);
+/**
+ * @swagger
+ * /api/v1/reports/getTotalFundedReportsBySectorID/all/{sector_id}:
+ *   get:
+ *    tags:
+ *      - reports
+ *    description: get total reports by district id
+ *    consumes:
+ *      - "application/json"
+ *      - "application/xml"
+ *    produces:
+ *      - "application/xml"
+ *      - "application/json"
+ *    parameters:
+ *      - name: "sector_id"
+ *        in: path
+ *        required: true
+ *        schema:
+ *          $ref: '#/definitions/reports'
+ *    responses:
+ *      201:
+ *        description: deleted
+ *      404:
+ *        description: Not found
+ *      500:
+ *        description: Internal Server error
+ */
+
 router.route('/getTotalPendingReportsByDistrictID/all').get(getTotalPendingReportsByDistrictID);
 router.route('/getTotalRejectedReportsByDistrictID/all').get(getTotalRejectedReportsByDistrictID);
 
