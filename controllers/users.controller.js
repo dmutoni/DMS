@@ -97,7 +97,6 @@ module.exports.createUser = asyncHandler(async (req, res) => {
             res.status(422).send(validation.errors);
         } else if (matched) {
             const hashedPassword = await hashPassword(req.body.password);
-            console.log("password ", hashedPassword)
             let inserts = [
                 uuidv4(),
                 req.body.first_name,
@@ -119,14 +118,11 @@ module.exports.createUser = asyncHandler(async (req, res) => {
                     res.status(401).send({error: err.sqlMessage})
                     // throw err;
                 } else {
-                    console.log(results)
-                    // results.send("row inserted");
                     return res.status(201).send({
                         error: false,
                         data: results,
                         message: 'New user has been created successfully.'
                     });
-                    // console.log("Row inserted: "+ results.affectedRows);
                 }
             });
         }
@@ -134,7 +130,6 @@ module.exports.createUser = asyncHandler(async (req, res) => {
     })
 })
 module.exports.getTotalUsers = asyncHandler(async (req, res) => {
-    console.log("reached");
     try {
         await dbConnection.query("SELECT COUNT(*) AS totalUsers FROM dms_users", (err, rows, fields) => {
             if (!err) {
@@ -144,7 +139,6 @@ module.exports.getTotalUsers = asyncHandler(async (req, res) => {
             }
         })
     } catch (error) {
-        console.log(error);
         return res.status(500).send({error: "internal server error"})
     }
 })
@@ -161,7 +155,6 @@ module.exports.getUsersBySector = asyncHandler(async (req, res) => {
                 res.send({status: false, data: err})
             }
         })
-    // console.log(report_id)
 })
 
 module.exports.getTotalUsersByDistrictID = asyncHandler(async (req, res) => {
@@ -202,11 +195,9 @@ module.exports.getUsersByDistrict = asyncHandler(async (req, res) => {
                 res.send({status: false, data: err})
             }
         })
-    // console.log(report_id)
 })
 module.exports.updateUser = asyncHandler(async (req, res) => {
     let user_id = req.params['id'];
-    console.log(user_id)
 
     user_id.trim();
     // let ii_id = req.params.iid;
@@ -225,7 +216,6 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
         if (!matched) {
             res.status(422).send(validation.errors);
         } else if (matched) {
-            // console.log(user);
             let inserts = {
                 first_name: req.body.first_name,
                 last_name: req.body.last_name,
@@ -238,7 +228,6 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
                 user_type: req.body.user_type,
                 user_status: req.body.user_status
             }
-            console.log(inserts);
             if (!user_id || !inserts) {
                 return res.status(400).send({error: user, message: 'Please provide user and user id'});
             }
@@ -257,12 +246,9 @@ module.exports.updateUser = asyncHandler(async (req, res) => {
                             }
                         })
 
-                    // return res.status( 201 ).send( {error: false, data: inserts, user_id , message: 'user has been updated successfully.'} );
-                    // console.log("Row inserted: "+ results.affectedRows);
                 }
                 ;
             })
-            console.log(printQuery);
         }
     });
 });
@@ -275,10 +261,7 @@ module.exports.deleteUser = asyncHandler(async (req, res) => {
     await dbConnection.query("UPDATE dms_users SET user_status = ?  WHERE user_id = ?", [status, user_id], function (error, results, fields) {
         if (error) throw error;
         else {
-            console.log(results)
-            // results.send("row inserted");
             return res.status(201).send({error: false, data: results, message: 'user has been delete successfully.'});
-            // console.l
         }
     });
 })
@@ -296,8 +279,6 @@ const readFiles = (req, res) => {
 }
 
 module.exports.createUSerSignature = async (req, res) => {
-    console.log("something")
-    console.log(req.body.signatures)
     if (!req.params) {
         return res.status(400).send({success: false, data: "no provided id"})
     }
@@ -313,14 +294,11 @@ module.exports.createUSerSignature = async (req, res) => {
     let inserts = {
         user_signature: req.file.filename
     }
-    // console.log()
     await dbConnection.query("UPDATE dms_users SET ? where user_id  = ?", [inserts, user_id], function (error, results, fields) {
         if (error) {
-            // deleteFile()
             res.status(401).send({error: error.sqlMessage})
             throw err;
         } else {
-            console.log(results);
             return res.status(201).send({error: false, data: inserts, message: 'user has been updated successfully.'});
         }
         ;
@@ -332,16 +310,9 @@ let userWithSameCategory = [];
 const updateNationalUsers = (req, res) => {
     dbConnection.query("UPDATE dms_users SET ? where user_type = 'NATIONAL' ", [readFiles(req, res)], function (error, results, fields) {
         if (error) {
-            // fs.unlink('images' + req.file.filename, () => {
-            //     return res.status(404).send({ message: "error occurred" })
-            // })
             deleteFile(req.file.filename)
             return res.status(500).send({success: false, message: "error occurred"});
-            // res.status(401).send({ error: error.sqlMessage })
-            throw error;
         } else {
-            console.log("files ", readFiles(req, res));
-
             return res.status(201).send({
                 error: false,
                 data: readFiles(req, res),
@@ -357,16 +328,8 @@ const updateUsersWithTheSameId = (req, res, index) => {
 
     dbConnection.query("UPDATE dms_users SET ? where user_id = ? ", [readFiles(req, res), index], function (error, results, fields) {
         if (error) {
-            // fs.unlink('images' + req.file.filename, () => {
-            //     return res.status(404).send({ message: "error occurred" })
-            // })
             deleteFile(req.file.filename)
-            // return res.status(500).send({message: "error occurred"});
-            // res.status(401).send({ error: error.sqlMessage })
             throw error;
-        } else {
-            console.log(results);
-            // return res.status(201).send({ error: false, data: results, message: 'user has been updated successfully.' });
         }
         ;
     })
@@ -431,8 +394,6 @@ module.exports.createLevelSignature = async (req, res) => {
     }
 }
 exports.login = async (req, res) => {
-    // let user_id = req.params['id'];
-    // user_id.trim();
     console.log(req.body)
     dbConnection.query("SELECT * FROM dms_users JOIN dms_sectors ON (dms_sectors.sector_id = dms_users.sector_id) JOIN dms_districts ON (dms_districts.district_id = dms_sectors.district_id)  JOIN dms_provinces ON (dms_provinces.province_id=dms_districts.province_id)  WHERE email = ?",
         [req.body.email], async (err, rowsFound, fields) => {

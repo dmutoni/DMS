@@ -4,7 +4,9 @@ exports.validObjectId = (id) => {
     return ((ObjectId.isValid(id)));
 };
 
-
+exports.generateVictimPin = () => {
+   return Math.floor(100000 + Math.random() * 900000);
+}
 
 /**
  * GET API RESPONSE
